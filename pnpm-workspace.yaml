@@ -1,3 +1,7 @@
 packages:
   - backend
   - frontend
+allowBuilds:
+  '@prisma/engines': false
+  better-sqlite3: false
+  prisma: false
