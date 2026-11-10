@@ -1,5 +1,11 @@
-
-# NestJS Observe key pair
+node_modules
+dist
 .env
+.DS_Store
+*.db
+src/generated
+.agents
+.claude
+.windsurf
+skills-lock.json
 
-/src/generated/prisma
