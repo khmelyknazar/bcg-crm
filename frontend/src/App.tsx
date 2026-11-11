@@ -1,28 +1,55 @@
-import { useState } from 'react'
-import { Sidebar, type SidebarItemId } from './components/Sidebar'
+import { useState } from 'react';
+import { Sidebar } from './components/Sidebar';
+import { Header } from './components/Header';
 
-const titles: Record<SidebarItemId, string> = {
-  analytics: 'Аналитика',
-  clients: 'Клиенты',
-  deals: 'Сделки',
-  products: 'Товары',
-  tasks: 'Задачі',
-}
+export default function App() {
+  const [activeTab, setActiveTab] = useState('clients');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
-function App() {
-  const [activeId, setActiveId] = useState<SidebarItemId>('analytics')
+  const getTitle = () => {
+    switch (activeTab) {
+      case 'analytics': return 'Аналітика';
+      case 'clients': return 'Клієнти';
+      case 'deals': return 'Угоди';
+      case 'services': return 'Послуги';
+      case 'tasks': return 'Завдання';
+      case 'settings': return 'Налаштування';
+      default: return 'Дашборд';
+    }
+  };
 
   return (
-    <div className="flex min-h-svh bg-slate-100 text-slate-900">
-      <Sidebar activeId={activeId} onNavigate={setActiveId} />
-      <main className="min-w-0 flex-1 px-6 py-8 pt-20 lg:px-10 lg:pt-8">
-        <p className="text-sm font-medium text-indigo-600">BCG CRM</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
-          {titles[activeId]}
-        </h1>
-      </main>
-    </div>
-  )
-}
+    <div className="flex min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased">
+      <Sidebar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        isOpen={isSidebarOpen} 
+        toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} 
+      />
+      
+      <div className="flex-1 flex flex-col min-w-0 transition-all duration-300">
+        <Header title={getTitle()} />
+        
+        <main className="flex-1 p-6 overflow-y-auto">
+          {activeTab === 'analytics' && (
+            <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-500">
+              Розділ "Аналітика" у розробці. Перейдіть до вкладки "Клієнти".
+            </div>
+          )}
 
-export default App
+          {activeTab === 'clients' && (
+            <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-500">
+              Тут буде таблиця клієнтів (кнопки вже працюють!).
+            </div>
+          )}
+
+          {['deals', 'services', 'tasks', 'settings'].includes(activeTab) && (
+            <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-500">
+              Розділ у розробці.
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}

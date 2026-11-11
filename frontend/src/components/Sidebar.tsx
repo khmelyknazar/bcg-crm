@@ -1,185 +1,108 @@
-import { useState, type ReactNode } from 'react'
+import React from 'react';
+import { LayoutDashboard, Users, Handshake, Package, ClipboardList, Settings, LogOut, SquareChevronLeft, SquareChevronRight } from 'lucide-react';
 
-export const sidebarItems = [
-  {
-    id: 'analytics',
-    label: 'Аналитика',
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 19V5m0 14h16M8 16v-4m4 4V8m4 8v-6"
-      />
-    ),
-  },
-  {
-    id: 'clients',
-    label: 'Клиенты',
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16 19v-1a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v1m14-8a3 3 0 1 0-2.2-5M17 11h4m-2-2v4M9.5 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
-      />
-    ),
-  },
-  {
-    id: 'deals',
-    label: 'Сделки',
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 8h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8Zm0 0 2.2-3.3A1 1 0 0 1 7.03 4h9.94a1 1 0 0 1 .83.45L20 8M12 12v3"
-      />
-    ),
-  },
-  {
-    id: 'products',
-    label: 'Товары',
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3Zm0 0v9m0 0 8-4.5M12 12 4 7.5"
-      />
-    ),
-  },
-  {
-    id: 'tasks',
-    label: 'Задачи',
-    icon: (
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 11.5 11 13.5 15.5 9M7 4h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"
-      />
-    ),
-  },
-] as const
-
-export type SidebarItemId = (typeof sidebarItems)[number]['id']
-
-type SidebarProps = {
-  activeId?: SidebarItemId
-  defaultActiveId?: SidebarItemId
-  onNavigate?: (id: SidebarItemId) => void
-  userName?: string
-  userRole?: string
+interface SidebarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+  isOpen: boolean;
+  toggleSidebar: () => void;
 }
 
-function NavIcon({ children }: { children: ReactNode }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="size-5 shrink-0"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      aria-hidden="true"
-    >
-      {children}
-    </svg>
-  )
-}
-
-export function Sidebar({
-  activeId,
-  defaultActiveId = 'analytics',
-  onNavigate,
-  userName = 'Менеджер',
-  userRole = 'Продажи',
-}: SidebarProps) {
-  const [internalActiveId, setInternalActiveId] = useState<SidebarItemId>(defaultActiveId)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const currentId = activeId ?? internalActiveId
-
-  function select(id: SidebarItemId) {
-    if (activeId === undefined) {
-      setInternalActiveId(id)
-    }
-    onNavigate?.(id)
-    setMobileOpen(false)
-  }
+export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isOpen, toggleSidebar }) => {
+  const menuItems = [
+    { id: 'analytics', icon: LayoutDashboard, label: 'Аналітика' },
+    { id: 'clients', icon: Users, label: 'Клієнти' },
+    { id: 'deals', icon: Handshake, label: 'Угоди' },
+    { id: 'services', icon: Package, label: 'Послуги' },
+    { id: 'tasks', icon: ClipboardList, label: 'Завдання' },
+    { id: 'settings', icon: Settings, label: 'Налаштування' },
+  ];
 
   return (
-    <>
-      <button
-        type="button"
-        className="fixed top-4 left-4 z-40 inline-flex size-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm lg:hidden"
-        aria-expanded={mobileOpen}
-        aria-controls="crm-sidebar"
-        onClick={() => setMobileOpen((open) => !open)}
-      >
-        <span className="sr-only">{mobileOpen ? 'Закрыть меню' : 'Открыть меню'}</span>
-        <NavIcon>
-          {mobileOpen ? (
-            <path strokeLinecap="round" d="M6 6l12 12M18 6 6 18" />
+    // Изменили w-[72px] на w-20, чтобы ничего не обрезалось по краям
+    <aside className={`${isOpen ? 'w-64' : 'w-20'} h-screen bg-zinc-900 border-r border-zinc-800 text-zinc-300 flex flex-col justify-between p-4 shrink-0 transition-all duration-300`}>
+      <div>
+        {/* Шапка сайдбара: контейнер с фиксированной высотой (h-16), чтобы меню не прыгало по вертикали */}
+        <div className={`flex items-center ${isOpen ? 'justify-between px-2' : 'justify-center'} border-b border-zinc-800 h-16 mb-6`}>
+          
+          {isOpen ? (
+            <>
+              {/* Левая часть: Иконка B + Текст BCG */}
+              <div className="flex items-center gap-3 overflow-hidden">
+                <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center font-bold text-zinc-950 text-sm shrink-0">
+                  B
+                </div>
+                <span className="font-semibold text-white tracking-wide text-[15px] leading-tight">
+                  BCG
+                </span>
+              </div>
+
+              {/* Правая часть: Кнопка сворачивания */}
+              <button
+                onClick={toggleSidebar}
+                className="text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 p-1.5 rounded-lg transition-colors shrink-0"
+                title="Згорнути меню"
+              >
+                <SquareChevronLeft className="w-5 h-5" />
+              </button>
+            </>
           ) : (
-            <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
+            /* Когда свернуто: Иконка B полностью убирается, вместо нее по центру встает кнопка */
+            <button
+              onClick={toggleSidebar}
+              className="text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 p-1.5 rounded-lg transition-colors shrink-0"
+              title="Розгорнути меню"
+            >
+              <SquareChevronRight className="w-6 h-6" />
+            </button>
           )}
-        </NavIcon>
-      </button>
-
-      {mobileOpen ? (
-        <button
-          type="button"
-          className="fixed inset-0 z-30 bg-slate-950/40 lg:hidden"
-          aria-label="Закрыть меню"
-          onClick={() => setMobileOpen(false)}
-        />
-      ) : null}
-
-      <aside
-        id="crm-sidebar"
-        className={`fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r border-slate-800 bg-slate-950 text-slate-300 transition-transform lg:static lg:translate-x-0 ${
-          mobileOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex h-16 items-center gap-3 border-b border-slate-800 px-5">
-          <span className="inline-flex size-9 items-center justify-center rounded-lg bg-indigo-500 text-sm font-semibold text-white">
-            BC
-          </span>
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-white">BCG CRM</p>
-            <p className="truncate text-xs text-slate-400">Рабочее пространство</p>
-          </div>
         </div>
 
-        <nav className="flex-1 space-y-1 px-3 py-4" aria-label="Разделы CRM">
-          {sidebarItems.map((item) => {
-            const active = item.id === currentId
+        {/* Навигация */}
+        <nav className="flex flex-col gap-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
             return (
               <button
                 key={item.id}
-                type="button"
-                aria-current={active ? 'page' : undefined}
-                onClick={() => select(item.id)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${
-                  active
-                    ? 'bg-indigo-500/15 text-white'
-                    : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                onClick={() => setActiveTab(item.id)}
+                title={!isOpen ? item.label : undefined}
+                className={`flex items-center ${isOpen ? 'gap-3 px-3' : 'justify-center'} py-2.5 rounded-lg text-sm font-medium transition-all ${
+                  isActive
+                    ? 'bg-zinc-800 text-white shadow-sm'
+                    : 'hover:bg-zinc-800/50 hover:text-zinc-200 text-zinc-400'
                 }`}
               >
-                <NavIcon>{item.icon}</NavIcon>
-                {item.label}
+                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-zinc-400'}`} />
+                {isOpen && <span className="whitespace-nowrap">{item.label}</span>}
               </button>
-            )
+            );
           })}
         </nav>
+      </div>
 
-        <div className="border-t border-slate-800 p-4">
+      {/* Низ: Профиль */}
+      <div className="flex flex-col gap-4">
+        <div className={`border-t border-zinc-800 pt-4 flex items-center ${isOpen ? 'justify-between px-2' : 'justify-center'} `}>
           <div className="flex items-center gap-3">
-            <span className="inline-flex size-9 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-200">
-              {userName.slice(0, 1).toUpperCase()}
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-white">{userName}</p>
-              <p className="truncate text-xs text-slate-400">{userRole}</p>
+            <div className="w-8 h-8 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xs font-medium text-zinc-200 shrink-0">
+              М
             </div>
+            {isOpen && (
+              <div className="text-xs overflow-hidden whitespace-nowrap">
+                <p className="font-medium text-zinc-200">Михайло</p>
+                <p className="text-zinc-500 text-[11px]">Менеджер</p>
+              </div>
+            )}
           </div>
+          {isOpen && (
+            <button className="text-zinc-500 hover:text-zinc-300 p-1.5 transition-colors shrink-0 hover:bg-zinc-800 rounded-lg">
+              <LogOut className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      </aside>
-    </>
-  )
-}
+      </div>
+    </aside>
+  );
+};
