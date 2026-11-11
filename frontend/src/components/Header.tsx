@@ -7,11 +7,11 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ title }) => {
   return (
-    <header className="h-16 bg-zinc-900/50 border-b border-zinc-800 px-6 flex items-center justify-between sticky top-0 backdrop-blur-md z-10">
-      <h2 className="text-lg font-semibold text-zinc-100">{title}</h2>
+    <header className="h-16 bg-white border-b border-zinc-200 px-6 flex items-center justify-between sticky top-0 z-10">
+      <h2 className="text-lg font-semibold text-zinc-900">{title}</h2>
 
       <div className="flex items-center gap-2">
-        <button className="p-2 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800 rounded-lg transition-colors">
+        <button className="p-2 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg transition-colors">
           <MoreVertical className="w-5 h-5" />
         </button>
       </div>

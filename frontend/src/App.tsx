@@ -19,7 +19,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-zinc-950 text-zinc-100 font-sans antialiased">
+    <div className="flex min-h-screen bg-zinc-200 text-zinc-900 font-sans antialiased">
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -32,19 +32,19 @@ export default function App() {
         
         <main className="flex-1 p-6 overflow-y-auto">
           {activeTab === 'analytics' && (
-            <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-500">
+            <div className="p-8 bg-white border border-zinc-200 shadow-sm rounded-xl text-center text-zinc-500">
               Розділ "Аналітика" у розробці. Перейдіть до вкладки "Клієнти".
             </div>
           )}
 
           {activeTab === 'clients' && (
-            <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-500">
+            <div className="p-8 bg-white border border-zinc-200 shadow-sm rounded-xl text-center text-zinc-500">
               Тут буде таблиця клієнтів (кнопки вже працюють!).
             </div>
           )}
 
           {['deals', 'services', 'tasks', 'settings'].includes(activeTab) && (
-            <div className="p-8 border border-dashed border-zinc-800 rounded-xl text-center text-zinc-500">
+            <div className="p-8 bg-white border border-zinc-200 shadow-sm rounded-xl text-center text-zinc-500">
               Розділ у розробці.
             </div>
           )}
