@@ -1,5 +1,6 @@
 import React from 'react';
-import { LayoutDashboard, Users, Handshake, Package, ClipboardList, Settings, LogOut, SquareChevronLeft, SquareChevronRight } from 'lucide-react';
+import { LayoutDashboard, Users, Handshake, Package, ClipboardList, Settings, LogOut, SquareChevronLeft } from 'lucide-react';
+import logoImg from '../assets/BCG_logo.png';
 
 interface SidebarProps {
   activeTab: string;
@@ -19,25 +20,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isOpe
   ];
 
   return (
-    // Изменили w-[72px] на w-20, чтобы ничего не обрезалось по краям
     <aside className={`${isOpen ? 'w-64' : 'w-20'} h-screen bg-zinc-900 border-r border-zinc-800 text-zinc-300 flex flex-col justify-between p-4 shrink-0 transition-all duration-300`}>
       <div>
-        {/* Шапка сайдбара: контейнер с фиксированной высотой (h-16), чтобы меню не прыгало по вертикали */}
         <div className={`flex items-center ${isOpen ? 'justify-between px-2' : 'justify-center'} border-b border-zinc-800 h-16 mb-6`}>
-          
           {isOpen ? (
             <>
-              {/* Левая часть: Иконка B + Текст BCG */}
-              <div className="flex items-center gap-3 overflow-hidden">
-                <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center font-bold text-zinc-950 text-sm shrink-0">
-                  B
-                </div>
-                <span className="font-semibold text-white tracking-wide text-[15px] leading-tight">
-                  BCG
-                </span>
+              <div className="flex items-center gap-2 overflow-hidden">
+                <img 
+                  src={logoImg} 
+                  alt="BCG Logo" 
+                  className="w-12 h-12 object-contain shrink-0" 
+                />
               </div>
 
-              {/* Правая часть: Кнопка сворачивания */}
               <button
                 onClick={toggleSidebar}
                 className="text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 p-1.5 rounded-lg transition-colors shrink-0"
@@ -47,18 +42,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isOpe
               </button>
             </>
           ) : (
-            /* Когда свернуто: Иконка B полностью убирается, вместо нее по центру встает кнопка */
             <button
               onClick={toggleSidebar}
-              className="text-zinc-500 hover:text-zinc-200 hover:bg-zinc-800 p-1.5 rounded-lg transition-colors shrink-0"
+              className="p-1 rounded-lg hover:bg-zinc-800 transition-colors shrink-0 flex items-center justify-center"
               title="Розгорнути меню"
             >
-              <SquareChevronRight className="w-6 h-6" />
+              <img 
+                src={logoImg} 
+                alt="BCG Logo" 
+                className="w-12 h-12 object-contain" 
+              />
             </button>
           )}
         </div>
 
-        {/* Навигация */}
         <nav className="flex flex-col gap-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
@@ -82,7 +79,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, isOpe
         </nav>
       </div>
 
-      {/* Низ: Профиль */}
       <div className="flex flex-col gap-4">
         <div className={`border-t border-zinc-800 pt-4 flex items-center ${isOpen ? 'justify-between px-2' : 'justify-center'} `}>
           <div className="flex items-center gap-3">
