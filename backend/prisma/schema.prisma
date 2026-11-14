@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,97 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+}
+
+enum Role {
+  OWNER
+  MANAGER
+}
+
+enum DealStatus {
+  OPEN
+  WON
+  LOST
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(MANAGER)
+  createdAt    DateTime @default(now())
+  clients      Client[]
+  deals        Deal[]
+  tasks        Task[]
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String?
+  email     String?
+  company   String?
+  notes     String?
+  ownerId   Int?
+  owner     User?    @relation(fields: [ownerId], references: [id])
+  deals     Deal[]
+  tasks     Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stage {
+  id       Int    @id @default(autoincrement())
+  name     String
+  position Int    @unique
+  deals    Deal[]
+}
+
+model Deal {
+  id        Int        @id @default(autoincrement())
+  title     String
+  amount    Float      @default(0)
+  status    DealStatus @default(OPEN)
+  clientId  Int
+  client    Client     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  stageId   Int
+  stage     Stage      @relation(fields: [stageId], references: [id])
+  ownerId   Int?
+  owner     User?      @relation(fields: [ownerId], references: [id])
+  items     DealItem[]
+  tasks     Task[]
+  createdAt DateTime   @default(now())
+  closedAt  DateTime?
+}
+
+model Product {
+  id    Int        @id @default(autoincrement())
+  name  String
+  price Float
+  items DealItem[]
+}
+
+model DealItem {
+  id        Int     @id @default(autoincrement())
+  dealId    Int
+  deal      Deal    @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int     @default(1)
+  price     Float
+}
+
+model Task {
+  id         Int       @id @default(autoincrement())
+  title      String
+  dueDate    DateTime?
+  done       Boolean   @default(false)
+  assigneeId Int?
+  assignee   User?     @relation(fields: [assigneeId], references: [id])
+  clientId   Int?
+  client     Client?   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  dealId     Int?
+  deal       Deal?     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
 }

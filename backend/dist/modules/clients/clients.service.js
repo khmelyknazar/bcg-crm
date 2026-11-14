@@ -4,26 +4,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Injectable } from '@nestjs/common';
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma.service.js';
 let ClientsService = class ClientsService {
-    create(createClientDto) {
-        return 'This action adds a new client';
+    prisma;
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    create(dto) {
+        return this.prisma.client.create({ data: dto });
     }
     findAll() {
-        return `This action returns all clients`;
+        return this.prisma.client.findMany({ orderBy: { createdAt: 'desc' } });
     }
-    findOne(id) {
-        return `This action returns a #${id} client`;
+    async findOne(id) {
+        const client = await this.prisma.client.findUnique({ where: { id } });
+        if (!client)
+            throw new NotFoundException(`Client ${id} not found`);
+        return client;
     }
-    update(id, updateClientDto) {
-        return `This action updates a #${id} client`;
+    async update(id, dto) {
+        await this.findOne(id);
+        return this.prisma.client.update({ where: { id }, data: dto });
     }
-    remove(id) {
-        return `This action removes a #${id} client`;
+    async remove(id) {
+        await this.findOne(id);
+        return this.prisma.client.delete({ where: { id } });
     }
 };
 ClientsService = __decorate([
-    Injectable()
+    Injectable(),
+    __metadata("design:paramtypes", [PrismaService])
 ], ClientsService);
 export { ClientsService };
 //# sourceMappingURL=clients.service.js.map
