@@ -1,75 +1,48 @@
-# React + TypeScript + Vite
+# BCG CRM — frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Клієнтська частина CRM-системи для управління клієнтами, угодами та завданнями.
+Навчальний проєкт (курсова робота), виконаний у команді: frontend — [ваше ім'я], backend — [ім'я друга].
 
-Currently, two official plugins are available:
+## Технології
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + TypeScript
+- Vite — збірка та dev-сервер
+- Tailwind CSS 4 — стилізація
+- React Router — навігація між розділами
+- lucide-react — іконки
 
-## React Compiler
+## Запуск
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Інші команди:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `npm run build` — збірка для production
+- `npm run lint` — перевірка коду
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Структура
 
 ```
+src/
+├── components/     # Sidebar, Header
+│   └── clients/    # сторінка клієнтів і форма
+├── config/         # список розділів навігації
+├── data/           # тестові дані (до підключення API)
+├── types/          # TypeScript-типи (Client тощо)
+├── App.tsx         # маршрути
+└── main.tsx        # точка входу
+```
+
+## Функціонал
+
+- Навігація через маршрути (`/clients`, `/deals`, `/tasks` тощо), згортання бокового меню
+- Клієнти: таблиця, пошук, фільтр за статусом, додавання, редагування та видалення
+- Інші розділи (угоди, послуги, завдання, аналітика) — у розробці
+
+## Стан проєкту
+
+Зараз дані беруться з тестового файлу `src/data/clients.ts`.
+Підключення до backend API — наступний етап.
