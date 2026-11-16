@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
+import { ClientsPage } from './components/clients/ClientsPage';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('clients');
@@ -19,7 +20,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex min-h-screen bg-zinc-200 text-zinc-900 font-sans antialiased">
+    <div className="flex h-screen overflow-hidden bg-zinc-200 text-zinc-900 font-sans antialiased">
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -37,11 +38,7 @@ export default function App() {
             </div>
           )}
 
-          {activeTab === 'clients' && (
-            <div className="p-8 bg-white border border-zinc-200 shadow-sm rounded-xl text-center text-zinc-500">
-              Тут буде таблиця клієнтів (кнопки вже працюють!).
-            </div>
-          )}
+          {activeTab === 'clients' && <ClientsPage />}
 
           {['deals', 'services', 'tasks', 'settings'].includes(activeTab) && (
             <div className="p-8 bg-white border border-zinc-200 shadow-sm rounded-xl text-center text-zinc-500">
