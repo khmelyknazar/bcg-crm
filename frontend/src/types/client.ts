@@ -4,6 +4,7 @@ export interface Client {
   id: string;
   name: string;
   company: string;
+  edrpou: string; // ЄДРПОУ (8 цифр) або РНОКПП для ФОП (10 цифр)
   email: string;
   phone: string;
   status: ClientStatus;

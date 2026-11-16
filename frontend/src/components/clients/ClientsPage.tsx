@@ -25,7 +25,7 @@ export const ClientsPage: FC = () => {
     return clients.filter((c) => {
       const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
       const matchesQuery =
-        !q || [c.name, c.company, c.email, c.phone].some((field) => field.toLowerCase().includes(q));
+        !q || [c.name, c.company, c.edrpou, c.email, c.phone].some((field) => field.toLowerCase().includes(q));
       return matchesStatus && matchesQuery;
     });
   }, [clients, query, statusFilter]);
@@ -69,7 +69,7 @@ export const ClientsPage: FC = () => {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Пошук за ім'ям, компанією, email..."
+            placeholder="Пошук за ім'ям, компанією, ЄДРПОУ..."
             className="w-full h-10 pl-9 pr-3 bg-white border border-zinc-300 rounded-lg text-sm placeholder:text-zinc-400 focus:outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200"
           />
         </div>
@@ -101,6 +101,7 @@ export const ClientsPage: FC = () => {
             <tr className="text-left text-xs font-semibold uppercase tracking-wide text-zinc-500 bg-zinc-50 border-b border-zinc-200">
               <th className="px-4 py-3">Клієнт</th>
               <th className="px-4 py-3">Компанія</th>
+              <th className="px-4 py-3">ЄДРПОУ</th>
               <th className="px-4 py-3">Телефон</th>
               <th className="px-4 py-3">Статус</th>
               <th className="px-4 py-3">Створено</th>
@@ -115,6 +116,7 @@ export const ClientsPage: FC = () => {
                   <p className="text-zinc-500 text-xs">{c.email}</p>
                 </td>
                 <td className="px-4 py-3 text-zinc-700">{c.company || '—'}</td>
+                <td className="px-4 py-3 text-zinc-700 tabular-nums">{c.edrpou || '—'}</td>
                 <td className="px-4 py-3 text-zinc-700 whitespace-nowrap">{c.phone || '—'}</td>
                 <td className="px-4 py-3">
                   <span className={`inline-block px-2 py-0.5 text-xs font-medium border rounded-md ${statusStyles[c.status]}`}>

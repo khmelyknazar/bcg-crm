@@ -13,6 +13,7 @@ interface ClientModalProps {
 const emptyForm: ClientFormData = {
   name: '',
   company: '',
+  edrpou: '',
   email: '',
   phone: '',
   status: 'lead',
@@ -24,7 +25,7 @@ const inputClass =
 export const ClientModal: FC<ClientModalProps> = ({ client, onSave, onClose }) => {
   const [form, setForm] = useState<ClientFormData>(
     client
-      ? { name: client.name, company: client.company, email: client.email, phone: client.phone, status: client.status }
+      ? { name: client.name, company: client.company, edrpou: client.edrpou, email: client.email, phone: client.phone, status: client.status }
       : emptyForm
   );
   const [errors, setErrors] = useState<Partial<Record<keyof ClientFormData, string>>>({});
@@ -36,6 +37,7 @@ export const ClientModal: FC<ClientModalProps> = ({ client, onSave, onClose }) =
   const validate = () => {
     const next: typeof errors = {};
     if (!form.name.trim()) next.name = "Вкажіть ім'я";
+    if (form.edrpou && !/^(\d{8}|\d{10})$/.test(form.edrpou)) next.edrpou = 'ЄДРПОУ — 8 цифр (для ФОП — 10)';
     if (!/^\S+@\S+\.\S+$/.test(form.email)) next.email = 'Некоректний email';
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -70,6 +72,19 @@ export const ClientModal: FC<ClientModalProps> = ({ client, onSave, onClose }) =
           <label className="text-sm font-medium text-zinc-700">
             Компанія
             <input className={`${inputClass} mt-1`} value={form.company} onChange={(e) => update('company', e.target.value)} />
+          </label>
+
+          <label className="text-sm font-medium text-zinc-700">
+            ЄДРПОУ
+            <input
+              className={`${inputClass} mt-1`}
+              value={form.edrpou}
+              maxLength={10}
+              inputMode="numeric"
+              placeholder="8 цифр (ФОП — 10)"
+              onChange={(e) => update('edrpou', e.target.value.replace(/\D/g, ''))}
+            />
+            {errors.edrpou && <span className="text-xs text-red-600">{errors.edrpou}</span>}
           </label>
 
           <label className="text-sm font-medium text-zinc-700">
