@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { DragEvent, FC } from 'react';
 import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
+import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
 import { DEAL_STATUS_LABELS } from '../../types/deal';
 import type { Deal, DealFormData, DealStatus } from '../../types/deal';
@@ -115,16 +116,15 @@ export const DealsPage: FC = () => {
           />
         </div>
 
-        <select
+        <Select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as DealStatus | 'all')}
-          className="h-10 px-3 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-700 focus:outline-none focus:border-zinc-500"
         >
           <option value="all">Усі статуси</option>
           {(Object.keys(DEAL_STATUS_LABELS) as DealStatus[]).map((s) => (
             <option key={s} value={s}>{DEAL_STATUS_LABELS[s]}</option>
           ))}
-        </select>
+        </Select>
 
         <p className="text-sm text-zinc-500 ml-2">
           Відкрито: <span className="font-semibold text-zinc-900">{openDeals.length}</span> на{' '}

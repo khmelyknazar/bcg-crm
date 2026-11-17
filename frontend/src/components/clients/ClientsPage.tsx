@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 import { Plus, Search, Pencil, Trash2 } from 'lucide-react';
+import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
 import { STATUS_LABELS } from '../../types/client';
 import type { Client, ClientFormData, ClientStatus } from '../../types/client';
@@ -76,16 +77,15 @@ export const ClientsPage: FC = () => {
           />
         </div>
 
-        <select
+        <Select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as ClientStatus | 'all')}
-          className="h-10 px-3 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-700 focus:outline-none focus:border-zinc-500"
         >
           <option value="all">Усі статуси</option>
           {(Object.keys(STATUS_LABELS) as ClientStatus[]).map((s) => (
             <option key={s} value={s}>{STATUS_LABELS[s]}</option>
           ))}
-        </select>
+        </Select>
 
         <button
           onClick={openCreate}

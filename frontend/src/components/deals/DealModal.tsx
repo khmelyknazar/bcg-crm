@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FC, FormEvent } from 'react';
 import { X } from 'lucide-react';
+import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
 import { DEAL_STATUS_LABELS } from '../../types/deal';
 import type { Deal, DealFormData, DealStatus } from '../../types/deal';
@@ -69,14 +70,14 @@ export const DealModal: FC<DealModalProps> = ({ deal, onSave, onClose }) => {
 
           <label className="text-sm font-medium text-zinc-700">
             Клієнт *
-            <select className={`${inputClass} mt-1`} value={clientId} onChange={(e) => setClientId(e.target.value)}>
+            <Select className="mt-1" value={clientId} onChange={(e) => setClientId(e.target.value)}>
               <option value="">Оберіть клієнта</option>
               {clients.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}{c.company ? `, ${c.company}` : ''}
                 </option>
               ))}
-            </select>
+            </Select>
             {errors.clientId && <span className="text-xs text-red-600">{errors.clientId}</span>}
           </label>
 
@@ -95,24 +96,24 @@ export const DealModal: FC<DealModalProps> = ({ deal, onSave, onClose }) => {
           <div className="grid grid-cols-2 gap-4">
             <label className="text-sm font-medium text-zinc-700">
               Етап
-              <select className={`${inputClass} mt-1`} value={stageId} onChange={(e) => setStageId(e.target.value)}>
+              <Select className="mt-1" value={stageId} onChange={(e) => setStageId(e.target.value)}>
                 {stages.map((s) => (
                   <option key={s.id} value={s.id}>{s.name}</option>
                 ))}
-              </select>
+              </Select>
             </label>
 
             <label className="text-sm font-medium text-zinc-700">
               Статус
-              <select
-                className={`${inputClass} mt-1`}
+              <Select
+                className="mt-1"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as DealStatus)}
               >
                 {(Object.keys(DEAL_STATUS_LABELS) as DealStatus[]).map((s) => (
                   <option key={s} value={s}>{DEAL_STATUS_LABELS[s]}</option>
                 ))}
-              </select>
+              </Select>
             </label>
           </div>
         </div>

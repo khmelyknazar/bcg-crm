@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FC, FormEvent } from 'react';
 import { X } from 'lucide-react';
+import { Select } from '../ui/Select';
 import { STATUS_LABELS } from '../../types/client';
 import type { Client, ClientFormData, ClientStatus } from '../../types/client';
 
@@ -100,15 +101,15 @@ export const ClientModal: FC<ClientModalProps> = ({ client, onSave, onClose }) =
 
           <label className="text-sm font-medium text-zinc-700">
             Статус
-            <select
-              className={`${inputClass} mt-1`}
+            <Select
+              className="mt-1"
               value={form.status}
               onChange={(e) => update('status', e.target.value as ClientStatus)}
             >
               {(Object.keys(STATUS_LABELS) as ClientStatus[]).map((s) => (
                 <option key={s} value={s}>{STATUS_LABELS[s]}</option>
               ))}
-            </select>
+            </Select>
           </label>
         </div>
 
