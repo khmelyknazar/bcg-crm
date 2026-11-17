@@ -4,6 +4,7 @@ import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { ClientsPage } from './components/clients/ClientsPage';
 import { DealsPage } from './components/deals/DealsPage';
+import { TasksPage } from './components/tasks/TasksPage';
 import { navItems } from './config/navigation';
 
 function Placeholder({ title }: { title: string }) {
@@ -48,8 +49,9 @@ export default function App() {
             <Route path="/" element={<Navigate to="/clients" replace />} />
             <Route path="/clients" element={<ClientsPage />} />
             <Route path="/deals" element={<DealsPage />} />
+            <Route path="/tasks" element={<TasksPage />} />
             {navItems
-              .filter((item) => item.path !== '/clients' && item.path !== '/deals')
+              .filter((item) => item.path !== '/clients' && item.path !== '/deals' && item.path !== '/tasks')
               .map((item) => (
                 <Route key={item.path} path={item.path} element={<Placeholder title={item.label} />} />
               ))}
