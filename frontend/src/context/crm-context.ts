@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type { Client } from '../types/client';
 import type { Deal, Stage } from '../types/deal';
+import type { Task } from '../types/task';
 
 // Спільні дані CRM: їх читають і змінюють різні сторінки
 export interface CrmContextValue {
@@ -10,6 +11,8 @@ export interface CrmContextValue {
   deals: Deal[];
   setDeals: Dispatch<SetStateAction<Deal[]>>;
   stages: Stage[];
+  tasks: Task[];
+  setTasks: Dispatch<SetStateAction<Task[]>>;
 }
 
 export const CrmContext = createContext<CrmContextValue | null>(null);

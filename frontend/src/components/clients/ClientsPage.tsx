@@ -14,7 +14,7 @@ const statusStyles: Record<ClientStatus, string> = {
 };
 
 export const ClientsPage: FC = () => {
-  const { clients, setClients, setDeals } = useCrm();
+  const { clients, setClients, setDeals, setTasks } = useCrm();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,10 +56,11 @@ export const ClientsPage: FC = () => {
   };
 
   const handleDelete = (client: Client) => {
-    if (window.confirm(`Видалити клієнта "${client.name}" разом з його угодами?`)) {
+    if (window.confirm(`Видалити клієнта "${client.name}" разом з його угодами та завданнями?`)) {
       setClients((prev) => prev.filter((c) => c.id !== client.id));
-      // як у базі (onDelete: Cascade): угоди видаленого клієнта зникають
+      // як у базі (onDelete: Cascade): угоди та завдання видаленого клієнта зникають
       setDeals((prev) => prev.filter((d) => d.clientId !== client.id));
+      setTasks((prev) => prev.filter((t) => t.clientId !== client.id));
     }
   };
 
