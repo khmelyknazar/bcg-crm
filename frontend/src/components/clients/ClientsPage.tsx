@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 import { Plus, Search, Pencil, Trash2 } from 'lucide-react';
-import { initialClients } from '../../data/clients';
+import { Select } from '../ui/Select';
+import { useCrm } from '../../context/crm-context';
 import { STATUS_LABELS } from '../../types/client';
 import type { Client, ClientFormData, ClientStatus } from '../../types/client';
 import { ClientModal } from './ClientModal';
@@ -13,7 +14,7 @@ const statusStyles: Record<ClientStatus, string> = {
 };
 
 export const ClientsPage: FC = () => {
-  const [clients, setClients] = useState<Client[]>(initialClients);
+  const { clients, setClients, setDeals } = useCrm();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +47,7 @@ export const ClientsPage: FC = () => {
     } else {
       const newClient: Client = {
         ...data,
-        id: crypto.randomUUID(),
+        id: clients.reduce((max, c) => Math.max(max, c.id), 0) + 1,
         createdAt: new Date().toISOString().slice(0, 10),
       };
       setClients((prev) => [newClient, ...prev]);
@@ -55,8 +56,10 @@ export const ClientsPage: FC = () => {
   };
 
   const handleDelete = (client: Client) => {
-    if (window.confirm(`Видалити клієнта "${client.name}"?`)) {
+    if (window.confirm(`Видалити клієнта "${client.name}" разом з його угодами?`)) {
       setClients((prev) => prev.filter((c) => c.id !== client.id));
+      // як у базі (onDelete: Cascade): угоди видаленого клієнта зникають
+      setDeals((prev) => prev.filter((d) => d.clientId !== client.id));
     }
   };
 
@@ -74,16 +77,15 @@ export const ClientsPage: FC = () => {
           />
         </div>
 
-        <select
+        <Select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value as ClientStatus | 'all')}
-          className="h-10 px-3 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-700 focus:outline-none focus:border-zinc-500"
         >
           <option value="all">Усі статуси</option>
           {(Object.keys(STATUS_LABELS) as ClientStatus[]).map((s) => (
             <option key={s} value={s}>{STATUS_LABELS[s]}</option>
           ))}
-        </select>
+        </Select>
 
         <button
           onClick={openCreate}

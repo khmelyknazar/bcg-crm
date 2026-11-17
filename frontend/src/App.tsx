@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { ClientsPage } from './components/clients/ClientsPage';
+import { DealsPage } from './components/deals/DealsPage';
 import { navItems } from './config/navigation';
 
 function Placeholder({ title }: { title: string }) {
@@ -46,8 +47,9 @@ export default function App() {
             {/* Редірект: головна адреса "/" перенаправляє на клієнтів */}
             <Route path="/" element={<Navigate to="/clients" replace />} />
             <Route path="/clients" element={<ClientsPage />} />
+            <Route path="/deals" element={<DealsPage />} />
             {navItems
-              .filter((item) => item.path !== '/clients')
+              .filter((item) => item.path !== '/clients' && item.path !== '/deals')
               .map((item) => (
                 <Route key={item.path} path={item.path} element={<Placeholder title={item.label} />} />
               ))}

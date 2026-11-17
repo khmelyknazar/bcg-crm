@@ -1,7 +1,7 @@
 export type ClientStatus = 'lead' | 'active' | 'inactive';
 
 export interface Client {
-  id: string;
+  id: number;
   name: string;
   company: string;
   edrpou: string; // ЄДРПОУ (8 цифр) або РНОКПП для ФОП (10 цифр)
