@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 import { Plus, Search, Pencil, Trash2 } from 'lucide-react';
-import { initialClients } from '../../data/clients';
+import { useCrm } from '../../context/crm-context';
 import { STATUS_LABELS } from '../../types/client';
 import type { Client, ClientFormData, ClientStatus } from '../../types/client';
 import { ClientModal } from './ClientModal';
@@ -13,7 +13,7 @@ const statusStyles: Record<ClientStatus, string> = {
 };
 
 export const ClientsPage: FC = () => {
-  const [clients, setClients] = useState<Client[]>(initialClients);
+  const { clients, setClients, setDeals } = useCrm();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,7 +46,7 @@ export const ClientsPage: FC = () => {
     } else {
       const newClient: Client = {
         ...data,
-        id: crypto.randomUUID(),
+        id: clients.reduce((max, c) => Math.max(max, c.id), 0) + 1,
         createdAt: new Date().toISOString().slice(0, 10),
       };
       setClients((prev) => [newClient, ...prev]);
@@ -55,8 +55,10 @@ export const ClientsPage: FC = () => {
   };
 
   const handleDelete = (client: Client) => {
-    if (window.confirm(`Видалити клієнта "${client.name}"?`)) {
+    if (window.confirm(`Видалити клієнта "${client.name}" разом з його угодами?`)) {
       setClients((prev) => prev.filter((c) => c.id !== client.id));
+      // як у базі (onDelete: Cascade): угоди видаленого клієнта зникають
+      setDeals((prev) => prev.filter((d) => d.clientId !== client.id));
     }
   };
 
