@@ -37,7 +37,6 @@ export const TasksPage: FC = () => {
           (filter === 'overdue' && isOverdue(task, now));
         return matchesQuery && matchesFilter;
       })
-      .slice()
       .sort((a, b) => {
         if (a.done !== b.done) return a.done ? 1 : -1;
         return a.dueDate.localeCompare(b.dueDate);
