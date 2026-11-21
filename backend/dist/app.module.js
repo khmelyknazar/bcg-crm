@@ -14,6 +14,7 @@ import { TasksModule } from './modules/tasks/tasks.module.js';
 import { ProductsModule } from './modules/products/products.module.js';
 import { AnalyticsModule } from './modules/analytics/analytics.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
+import { PrismaModule } from './prisma.module.js';
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 let AppModule = class AppModule {
 };
@@ -25,6 +26,7 @@ AppModule = __decorate([
                 appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',
                 serviceId: 'backend',
             }),
+            PrismaModule,
             ClientsModule,
             DealsModule,
             TasksModule,

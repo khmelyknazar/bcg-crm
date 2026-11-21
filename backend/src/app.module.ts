@@ -22,6 +22,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appSecret: process.env.OBSERVE_APP_SECRET ?? 'YOUR_APP_SECRET',
       serviceId: 'backend',
     }),
+    PrismaModule,
     ClientsModule,
     DealsModule,
     TasksModule,
