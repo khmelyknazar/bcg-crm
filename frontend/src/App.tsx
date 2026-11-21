@@ -5,10 +5,11 @@ import { Header } from './components/Header';
 import { ClientsPage } from './components/clients/ClientsPage';
 import { DealsPage } from './components/deals/DealsPage';
 import { TasksPage } from './components/tasks/TasksPage';
+import { ServicesPage } from './components/services/ServicesPage';
 import { navItems } from './config/navigation';
 
 // Розділи, для яких уже є справжні сторінки
-const readyPaths = ['/clients', '/deals', '/tasks'];
+const readyPaths = ['/clients', '/deals', '/tasks', '/services'];
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -25,7 +26,7 @@ export default function App() {
       const saved = localStorage.getItem('sidebar-open');
       if (saved !== null) return saved === 'true';
     } catch {
-      // localStorage може бути недоступний тоді просто йдемо далі
+      // localStorage може бути недоступний — тоді просто йдемо далі
     }
     return window.innerWidth >= 1024;
   });
@@ -35,7 +36,7 @@ export default function App() {
     try {
       localStorage.setItem('sidebar-open', String(isSidebarOpen));
     } catch {
-
+      // нічого страшного, налаштування просто не збережеться
     }
   }, [isSidebarOpen]);
 
@@ -48,15 +49,18 @@ export default function App() {
 
         <main className="flex-1 p-6 overflow-y-auto">
           <Routes>
+            {/* Редірект: головна адреса "/" перенаправляє на клієнтів */}
             <Route path="/" element={<Navigate to="/clients" replace />} />
             <Route path="/clients" element={<ClientsPage />} />
             <Route path="/deals" element={<DealsPage />} />
             <Route path="/tasks" element={<TasksPage />} />
+            <Route path="/services" element={<ServicesPage />} />
             {navItems
               .filter((item) => !readyPaths.includes(item.path))
               .map((item) => (
                 <Route key={item.path} path={item.path} element={<Placeholder title={item.label} />} />
               ))}
+            {/* Будь-яка неіснуюча адреса теж веде на клієнтів */}
             <Route path="*" element={<Navigate to="/clients" replace />} />
           </Routes>
         </main>
