@@ -1,0 +1,11 @@
+{
+  "name": "bcg-crm",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"pnpm --filter backend start:dev\" \"pnpm --filter frontend dev\"",
+    "build": "pnpm -r build"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
+  }
+}
