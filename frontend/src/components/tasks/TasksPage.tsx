@@ -6,16 +6,19 @@ import { useCrm } from '../../context/crm-context';
 import { TASK_FILTER_LABELS } from '../../types/task';
 import type { Task, TaskFilter, TaskFormData } from '../../types/task';
 import { formatDate, today } from '../../utils/format';
+import { ErrorBanner } from '../ui/ErrorBanner';
+import { getErrorMessage, tasksApi } from '../../api';
 import { TaskModal } from './TaskModal';
 
-const isOverdue = (task: Task, now: string) => !task.done && task.dueDate < now;
+const isOverdue = (task: Task, now: string) => !task.done && task.dueDate !== '' && task.dueDate < now;
 
 export const TasksPage: FC = () => {
-  const { clients, tasks, setTasks } = useCrm();
+  const { clients, tasks, setTasks, reload } = useCrm();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<TaskFilter>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Task | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const clientsById = useMemo(() => new Map(clients.map((c) => [c.id, c])), [clients]);
   const now = today();
@@ -55,27 +58,41 @@ export const TasksPage: FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (data: TaskFormData) => {
-    if (editing) {
-      setTasks((prev) => prev.map((t) => (t.id === editing.id ? { ...t, ...data } : t)));
-    } else {
-      const newTask: Task = {
-        ...data,
-        id: tasks.reduce((max, t) => Math.max(max, t.id), 0) + 1,
-      };
-      setTasks((prev) => [newTask, ...prev]);
+  const handleSave = async (data: TaskFormData) => {
+    try {
+      if (editing) {
+        const saved = await tasksApi.update(editing.id, data);
+        setTasks((prev) => prev.map((t) => (t.id === saved.id ? saved : t)));
+      } else {
+        const created = await tasksApi.create(data);
+        setTasks((prev) => [created, ...prev]);
+      }
+      setIsModalOpen(false);
+    } catch (e) {
+      setActionError(getErrorMessage(e));
     }
-    setIsModalOpen(false);
   };
 
-  const handleDelete = (task: Task) => {
-    if (window.confirm(`Видалити завдання "${task.title}"?`)) {
+  const handleDelete = async (task: Task) => {
+    if (!window.confirm(`Видалити завдання "${task.title}"?`)) return;
+    try {
+      await tasksApi.remove(task.id);
       setTasks((prev) => prev.filter((t) => t.id !== task.id));
+    } catch (e) {
+      setActionError(getErrorMessage(e));
     }
   };
 
-  const toggleDone = (task: Task) => {
+  const toggleDone = async (task: Task) => {
+    // Галочка змінюється одразу, а сервер підтверджує у фоні
     setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, done: !t.done } : t)));
+    try {
+      const saved = await tasksApi.update(task.id, { done: !task.done });
+      setTasks((prev) => prev.map((t) => (t.id === saved.id ? saved : t)));
+    } catch (e) {
+      setActionError(getErrorMessage(e));
+      await reload();
+    }
   };
 
   return (
@@ -181,6 +198,8 @@ export const TasksPage: FC = () => {
       <div className="px-4 py-3 border-t border-zinc-200 text-xs text-zinc-500">
         Показано {visibleTasks.length} з {tasks.length}
       </div>
+
+      {actionError && <ErrorBanner message={actionError} onClose={() => setActionError(null)} />}
 
       {isModalOpen && (
         <TaskModal task={editing} onSave={handleSave} onClose={() => setIsModalOpen(false)} />

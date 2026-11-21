@@ -5,7 +5,9 @@ import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
 import { DEAL_STATUS_LABELS } from '../../types/deal';
 import type { Deal, DealFormData, DealStatus } from '../../types/deal';
-import { formatMoney, today } from '../../utils/format';
+import { formatMoney } from '../../utils/format';
+import { ErrorBanner } from '../ui/ErrorBanner';
+import { dealsApi, getErrorMessage } from '../../api';
 import { DealModal } from './DealModal';
 
 const statusStyles: Record<DealStatus, string> = {
@@ -15,13 +17,14 @@ const statusStyles: Record<DealStatus, string> = {
 };
 
 export const DealsPage: FC = () => {
-  const { clients, deals, setDeals, stages } = useCrm();
+  const { clients, deals, setDeals, stages, reload } = useCrm();
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<DealStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Deal | null>(null);
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [overStageId, setOverStageId] = useState<number | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Словник "id клієнта -> клієнт", щоб швидко знаходити ім'я за clientId
   const clientsById = useMemo(() => new Map(clients.map((c) => [c.id, c])), [clients]);
@@ -53,34 +56,44 @@ export const DealsPage: FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (data: DealFormData) => {
-    // Закрита угода (виграна або програна) отримує дату закриття, відкрита — ні
-    const closedAtFor = (previous: string | null) => (data.status === 'OPEN' ? null : (previous ?? today()));
-
-    if (editing) {
-      setDeals((prev) =>
-        prev.map((d) => (d.id === editing.id ? { ...d, ...data, closedAt: closedAtFor(d.closedAt) } : d))
-      );
-    } else {
-      const newDeal: Deal = {
-        ...data,
-        id: deals.reduce((max, d) => Math.max(max, d.id), 0) + 1,
-        createdAt: today(),
-        closedAt: closedAtFor(null),
-      };
-      setDeals((prev) => [newDeal, ...prev]);
+  const handleSave = async (data: DealFormData) => {
+    try {
+      if (editing) {
+        const saved = await dealsApi.update(editing.id, data);
+        setDeals((prev) => prev.map((d) => (d.id === saved.id ? saved : d)));
+      } else {
+        const created = await dealsApi.create(data);
+        setDeals((prev) => [created, ...prev]);
+      }
+      setIsModalOpen(false);
+    } catch (e) {
+      setActionError(getErrorMessage(e));
     }
-    setIsModalOpen(false);
   };
 
-  const handleDelete = (deal: Deal) => {
-    if (window.confirm(`Видалити угоду "${deal.title}"?`)) {
+  const handleDelete = async (deal: Deal) => {
+    if (!window.confirm(`Видалити угоду "${deal.title}"?`)) return;
+    try {
+      await dealsApi.remove(deal.id);
       setDeals((prev) => prev.filter((d) => d.id !== deal.id));
+    } catch (e) {
+      setActionError(getErrorMessage(e));
     }
   };
 
-  const moveDeal = (dealId: number, stageId: number) => {
+  const moveDeal = async (dealId: number, stageId: number) => {
+    const current = deals.find((d) => d.id === dealId);
+    if (!current || current.stageId === stageId) return;
+
+    // Спочатку оновлюємо екран, щоб картка не "стрибала", потім підтверджуємо на сервері
     setDeals((prev) => prev.map((d) => (d.id === dealId ? { ...d, stageId } : d)));
+    try {
+      const saved = await dealsApi.update(dealId, { stageId });
+      setDeals((prev) => prev.map((d) => (d.id === saved.id ? saved : d)));
+    } catch (e) {
+      setActionError(getErrorMessage(e));
+      await reload(); // сервер не прийняв зміну — повертаємо актуальні дані
+    }
   };
 
   // Перетягування карток між колонками (вбудований drag-and-drop браузера)
@@ -217,6 +230,8 @@ export const DealsPage: FC = () => {
           );
         })}
       </div>
+
+      {actionError && <ErrorBanner message={actionError} onClose={() => setActionError(null)} />}
 
       {isModalOpen && <DealModal deal={editing} onSave={handleSave} onClose={() => setIsModalOpen(false)} />}
     </div>

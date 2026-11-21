@@ -5,10 +5,12 @@ import { Header } from './components/Header';
 import { ClientsPage } from './components/clients/ClientsPage';
 import { DealsPage } from './components/deals/DealsPage';
 import { TasksPage } from './components/tasks/TasksPage';
+import { ServicesPage } from './components/services/ServicesPage';
 import { navItems } from './config/navigation';
+import { useCrm } from './context/crm-context';
 
 // Розділи, для яких уже є справжні сторінки
-const readyPaths = ['/clients', '/deals', '/tasks'];
+const readyPaths = ['/clients', '/deals', '/tasks', '/services'];
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -19,13 +21,14 @@ function Placeholder({ title }: { title: string }) {
 }
 
 export default function App() {
+  const { status, error, retry } = useCrm();
   // Початковий стан меню: збережений вибір користувача, інакше залежно від ширини екрана
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     try {
       const saved = localStorage.getItem('sidebar-open');
       if (saved !== null) return saved === 'true';
     } catch {
-      // localStorage може бути недоступний тоді просто йдемо далі
+      // localStorage може бути недоступний — тоді просто йдемо далі
     }
     return window.innerWidth >= 1024;
   });
@@ -35,7 +38,7 @@ export default function App() {
     try {
       localStorage.setItem('sidebar-open', String(isSidebarOpen));
     } catch {
-
+      // нічого страшного, налаштування просто не збережеться
     }
   }, [isSidebarOpen]);
 
@@ -47,18 +50,38 @@ export default function App() {
         <Header />
 
         <main className="flex-1 p-6 overflow-y-auto">
-          <Routes>
-            <Route path="/" element={<Navigate to="/clients" replace />} />
-            <Route path="/clients" element={<ClientsPage />} />
-            <Route path="/deals" element={<DealsPage />} />
-            <Route path="/tasks" element={<TasksPage />} />
-            {navItems
-              .filter((item) => !readyPaths.includes(item.path))
-              .map((item) => (
-                <Route key={item.path} path={item.path} element={<Placeholder title={item.label} />} />
-              ))}
-            <Route path="*" element={<Navigate to="/clients" replace />} />
-          </Routes>
+          {status === 'loading' && <p className="text-sm text-zinc-500">Завантаження даних...</p>}
+
+          {status === 'error' && (
+            <div className="p-8 bg-white border border-zinc-300 shadow-sm rounded-xl text-center">
+              <p className="font-medium text-zinc-900">Не вдалося завантажити дані</p>
+              <p className="text-sm text-zinc-500 mt-1">{error}</p>
+              <button
+                onClick={retry}
+                className="mt-4 h-9 px-4 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-800"
+              >
+                Спробувати ще раз
+              </button>
+            </div>
+          )}
+
+          {status === 'ready' && (
+            <Routes>
+              {/* Редірект: головна адреса "/" перенаправляє на клієнтів */}
+              <Route path="/" element={<Navigate to="/clients" replace />} />
+              <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/deals" element={<DealsPage />} />
+              <Route path="/tasks" element={<TasksPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              {navItems
+                .filter((item) => !readyPaths.includes(item.path))
+                .map((item) => (
+                  <Route key={item.path} path={item.path} element={<Placeholder title={item.label} />} />
+                ))}
+              {/* Будь-яка неіснуюча адреса теж веде на клієнтів */}
+              <Route path="*" element={<Navigate to="/clients" replace />} />
+            </Routes>
+          )}
         </main>
       </div>
     </div>
