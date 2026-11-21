@@ -5,6 +5,8 @@ import type { Deal, Stage } from '../types/deal';
 import type { Task } from '../types/task';
 import type { Service } from '../types/service';
 
+export type LoadStatus = 'loading' | 'ready' | 'error';
+
 // Спільні дані CRM: їх читають і змінюють різні сторінки
 export interface CrmContextValue {
   clients: Client[];
@@ -16,6 +18,10 @@ export interface CrmContextValue {
   setTasks: Dispatch<SetStateAction<Task[]>>;
   services: Service[];
   setServices: Dispatch<SetStateAction<Service[]>>;
+  status: LoadStatus;
+  error: string | null;
+  reload: () => Promise<void>;
+  retry: () => void;
 }
 
 export const CrmContext = createContext<CrmContextValue | null>(null);

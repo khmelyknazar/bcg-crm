@@ -5,6 +5,8 @@ import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
 import { STATUS_LABELS } from '../../types/client';
 import type { Client, ClientFormData, ClientStatus } from '../../types/client';
+import { ErrorBanner } from '../ui/ErrorBanner';
+import { clientsApi, getErrorMessage } from '../../api';
 import { ClientModal } from './ClientModal';
 
 const statusStyles: Record<ClientStatus, string> = {
@@ -19,6 +21,7 @@ export const ClientsPage: FC = () => {
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Client | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Список перераховується тільки коли змінюються дані, пошук або фільтр
   const visibleClients = useMemo(() => {
@@ -41,26 +44,31 @@ export const ClientsPage: FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (data: ClientFormData) => {
-    if (editing) {
-      setClients((prev) => prev.map((c) => (c.id === editing.id ? { ...c, ...data } : c)));
-    } else {
-      const newClient: Client = {
-        ...data,
-        id: clients.reduce((max, c) => Math.max(max, c.id), 0) + 1,
-        createdAt: new Date().toISOString().slice(0, 10),
-      };
-      setClients((prev) => [newClient, ...prev]);
+  const handleSave = async (data: ClientFormData) => {
+    try {
+      if (editing) {
+        const saved = await clientsApi.update(editing.id, data);
+        setClients((prev) => prev.map((c) => (c.id === saved.id ? saved : c)));
+      } else {
+        const created = await clientsApi.create(data);
+        setClients((prev) => [created, ...prev]);
+      }
+      setIsModalOpen(false);
+    } catch (e) {
+      setActionError(getErrorMessage(e));
     }
-    setIsModalOpen(false);
   };
 
-  const handleDelete = (client: Client) => {
-    if (window.confirm(`Видалити клієнта "${client.name}" разом з його угодами та завданнями?`)) {
+  const handleDelete = async (client: Client) => {
+    if (!window.confirm(`Видалити клієнта "${client.name}" разом з його угодами та завданнями?`)) return;
+    try {
+      await clientsApi.remove(client.id);
       setClients((prev) => prev.filter((c) => c.id !== client.id));
-      // як у базі (onDelete: Cascade): угоди та завдання видаленого клієнта зникають
+      // бекенд теж видаляє угоди та завдання клієнта (Cascade), тому прибираємо їх і в себе
       setDeals((prev) => prev.filter((d) => d.clientId !== client.id));
       setTasks((prev) => prev.filter((t) => t.clientId !== client.id));
+    } catch (e) {
+      setActionError(getErrorMessage(e));
     }
   };
 
@@ -150,6 +158,8 @@ export const ClientsPage: FC = () => {
       <div className="px-4 py-3 border-t border-zinc-200 text-xs text-zinc-500">
         Показано {visibleClients.length} з {clients.length}
       </div>
+
+      {actionError && <ErrorBanner message={actionError} onClose={() => setActionError(null)} />}
 
       {isModalOpen && (
         <ClientModal client={editing} onSave={handleSave} onClose={() => setIsModalOpen(false)} />
