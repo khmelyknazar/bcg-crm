@@ -24,3 +24,12 @@ export const DealStatus = {
 } as const
 
 export type DealStatus = (typeof DealStatus)[keyof typeof DealStatus]
+
+
+export const ClientStatus = {
+  active: 'active',
+  lead: 'lead',
+  inactive: 'inactive'
+} as const
+
+export type ClientStatus = (typeof ClientStatus)[keyof typeof ClientStatus]

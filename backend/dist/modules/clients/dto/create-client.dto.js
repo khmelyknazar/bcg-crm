@@ -7,13 +7,15 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength, IsIn } from 'class-validator';
 export class CreateClientDto {
     name;
     phone;
     email;
     company;
     notes;
+    edrpou;
+    status;
 }
 __decorate([
     IsString(),
@@ -40,4 +42,14 @@ __decorate([
     IsString(),
     __metadata("design:type", String)
 ], CreateClientDto.prototype, "notes", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateClientDto.prototype, "edrpou", void 0);
+__decorate([
+    IsOptional(),
+    IsIn(['active', 'lead', 'inactive']),
+    __metadata("design:type", String)
+], CreateClientDto.prototype, "status", void 0);
 //# sourceMappingURL=create-client.dto.js.map

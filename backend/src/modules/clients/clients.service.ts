@@ -11,8 +11,16 @@ export class ClientsService {
     return this.prisma.client.create({ data: dto });
   }
 
-  findAll() {
-    return this.prisma.client.findMany({ orderBy: { createdAt: 'desc' } });
+  async findAll(search?: string, status?: 'active' | 'lead' | 'inactive') {
+    const clients = await this.prisma.client.findMany({
+      where: status ? { status } : undefined,
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!search) return clients;
+    const q = search.toLowerCase();
+    return clients.filter((c) =>
+      [c.name, c.company, c.edrpou, c.email, c.phone].some((v) => v?.toLowerCase().includes(q)),
+    );
   }
 
   async findOne(id: number) {

@@ -4,4 +4,6 @@ export declare class CreateClientDto {
     email?: string;
     company?: string;
     notes?: string;
+    edrpou?: string;
+    status?: 'active' | 'lead' | 'inactive';
 }

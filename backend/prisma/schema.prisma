@@ -18,6 +18,12 @@ enum DealStatus {
   LOST
 }
 
+enum ClientStatus {
+  active
+  lead
+  inactive
+}
+
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
@@ -36,6 +42,8 @@ model Client {
   phone     String?
   email     String?
   company   String?
+  edrpou    String?
+  status    ClientStatus @default(lead)
   notes     String?
   ownerId   Int?
   owner     User?    @relation(fields: [ownerId], references: [id])

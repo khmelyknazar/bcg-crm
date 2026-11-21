@@ -42,6 +42,8 @@ export type ClientMinAggregateOutputType = {
   phone: string | null
   email: string | null
   company: string | null
+  edrpou: string | null
+  status: $Enums.ClientStatus | null
   notes: string | null
   ownerId: number | null
   createdAt: Date | null
@@ -54,6 +56,8 @@ export type ClientMaxAggregateOutputType = {
   phone: string | null
   email: string | null
   company: string | null
+  edrpou: string | null
+  status: $Enums.ClientStatus | null
   notes: string | null
   ownerId: number | null
   createdAt: Date | null
@@ -66,6 +70,8 @@ export type ClientCountAggregateOutputType = {
   phone: number
   email: number
   company: number
+  edrpou: number
+  status: number
   notes: number
   ownerId: number
   createdAt: number
@@ -90,6 +96,8 @@ export type ClientMinAggregateInputType = {
   phone?: true
   email?: true
   company?: true
+  edrpou?: true
+  status?: true
   notes?: true
   ownerId?: true
   createdAt?: true
@@ -102,6 +110,8 @@ export type ClientMaxAggregateInputType = {
   phone?: true
   email?: true
   company?: true
+  edrpou?: true
+  status?: true
   notes?: true
   ownerId?: true
   createdAt?: true
@@ -114,6 +124,8 @@ export type ClientCountAggregateInputType = {
   phone?: true
   email?: true
   company?: true
+  edrpou?: true
+  status?: true
   notes?: true
   ownerId?: true
   createdAt?: true
@@ -213,6 +225,8 @@ export type ClientGroupByOutputType = {
   phone: string | null
   email: string | null
   company: string | null
+  edrpou: string | null
+  status: $Enums.ClientStatus
   notes: string | null
   ownerId: number | null
   createdAt: Date
@@ -248,6 +262,8 @@ export type ClientWhereInput = {
   phone?: Prisma.StringNullableFilter<"Client"> | string | null
   email?: Prisma.StringNullableFilter<"Client"> | string | null
   company?: Prisma.StringNullableFilter<"Client"> | string | null
+  edrpou?: Prisma.StringNullableFilter<"Client"> | string | null
+  status?: Prisma.EnumClientStatusFilter<"Client"> | $Enums.ClientStatus
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
   ownerId?: Prisma.IntNullableFilter<"Client"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
@@ -263,6 +279,8 @@ export type ClientOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.SortOrderInput | Prisma.SortOrder
+  edrpou?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -281,6 +299,8 @@ export type ClientWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"Client"> | string | null
   email?: Prisma.StringNullableFilter<"Client"> | string | null
   company?: Prisma.StringNullableFilter<"Client"> | string | null
+  edrpou?: Prisma.StringNullableFilter<"Client"> | string | null
+  status?: Prisma.EnumClientStatusFilter<"Client"> | $Enums.ClientStatus
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
   ownerId?: Prisma.IntNullableFilter<"Client"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
@@ -296,6 +316,8 @@ export type ClientOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   email?: Prisma.SortOrderInput | Prisma.SortOrder
   company?: Prisma.SortOrderInput | Prisma.SortOrder
+  edrpou?: Prisma.SortOrderInput | Prisma.SortOrder
+  status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -316,6 +338,8 @@ export type ClientScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   email?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   company?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  edrpou?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
+  status?: Prisma.EnumClientStatusWithAggregatesFilter<"Client"> | $Enums.ClientStatus
   notes?: Prisma.StringNullableWithAggregatesFilter<"Client"> | string | null
   ownerId?: Prisma.IntNullableWithAggregatesFilter<"Client"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Client"> | Date | string
@@ -327,6 +351,8 @@ export type ClientCreateInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -341,6 +367,8 @@ export type ClientUncheckedCreateInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   ownerId?: number | null
   createdAt?: Date | string
@@ -354,6 +382,8 @@ export type ClientUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -368,6 +398,8 @@ export type ClientUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -382,6 +414,8 @@ export type ClientCreateManyInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   ownerId?: number | null
   createdAt?: Date | string
@@ -393,6 +427,8 @@ export type ClientUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -404,6 +440,8 @@ export type ClientUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -426,6 +464,8 @@ export type ClientCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   company?: Prisma.SortOrder
+  edrpou?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -443,6 +483,8 @@ export type ClientMaxOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   company?: Prisma.SortOrder
+  edrpou?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -455,6 +497,8 @@ export type ClientMinOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   email?: Prisma.SortOrder
   company?: Prisma.SortOrder
+  edrpou?: Prisma.SortOrder
+  status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -522,6 +566,10 @@ export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
+export type EnumClientStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ClientStatus
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -565,6 +613,8 @@ export type ClientCreateWithoutOwnerInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -578,6 +628,8 @@ export type ClientUncheckedCreateWithoutOwnerInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -619,6 +671,8 @@ export type ClientScalarWhereInput = {
   phone?: Prisma.StringNullableFilter<"Client"> | string | null
   email?: Prisma.StringNullableFilter<"Client"> | string | null
   company?: Prisma.StringNullableFilter<"Client"> | string | null
+  edrpou?: Prisma.StringNullableFilter<"Client"> | string | null
+  status?: Prisma.EnumClientStatusFilter<"Client"> | $Enums.ClientStatus
   notes?: Prisma.StringNullableFilter<"Client"> | string | null
   ownerId?: Prisma.IntNullableFilter<"Client"> | number | null
   createdAt?: Prisma.DateTimeFilter<"Client"> | Date | string
@@ -630,6 +684,8 @@ export type ClientCreateWithoutDealsInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -643,6 +699,8 @@ export type ClientUncheckedCreateWithoutDealsInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   ownerId?: number | null
   createdAt?: Date | string
@@ -671,6 +729,8 @@ export type ClientUpdateWithoutDealsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -684,6 +744,8 @@ export type ClientUncheckedUpdateWithoutDealsInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -696,6 +758,8 @@ export type ClientCreateWithoutTasksInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -709,6 +773,8 @@ export type ClientUncheckedCreateWithoutTasksInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   ownerId?: number | null
   createdAt?: Date | string
@@ -737,6 +803,8 @@ export type ClientUpdateWithoutTasksInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -750,6 +818,8 @@ export type ClientUncheckedUpdateWithoutTasksInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ownerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -763,6 +833,8 @@ export type ClientCreateManyOwnerInput = {
   phone?: string | null
   email?: string | null
   company?: string | null
+  edrpou?: string | null
+  status?: $Enums.ClientStatus
   notes?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -773,6 +845,8 @@ export type ClientUpdateWithoutOwnerInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -786,6 +860,8 @@ export type ClientUncheckedUpdateWithoutOwnerInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -799,6 +875,8 @@ export type ClientUncheckedUpdateManyWithoutOwnerInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   company?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  edrpou?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumClientStatusFieldUpdateOperationsInput | $Enums.ClientStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -850,6 +928,8 @@ export type ClientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   phone?: boolean
   email?: boolean
   company?: boolean
+  edrpou?: boolean
+  status?: boolean
   notes?: boolean
   ownerId?: boolean
   createdAt?: boolean
@@ -866,6 +946,8 @@ export type ClientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   email?: boolean
   company?: boolean
+  edrpou?: boolean
+  status?: boolean
   notes?: boolean
   ownerId?: boolean
   createdAt?: boolean
@@ -879,6 +961,8 @@ export type ClientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   phone?: boolean
   email?: boolean
   company?: boolean
+  edrpou?: boolean
+  status?: boolean
   notes?: boolean
   ownerId?: boolean
   createdAt?: boolean
@@ -892,13 +976,15 @@ export type ClientSelectScalar = {
   phone?: boolean
   email?: boolean
   company?: boolean
+  edrpou?: boolean
+  status?: boolean
   notes?: boolean
   ownerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "company" | "notes" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
+export type ClientOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "phone" | "email" | "company" | "edrpou" | "status" | "notes" | "ownerId" | "createdAt" | "updatedAt", ExtArgs["result"]["client"]>
 export type ClientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.Client$ownerArgs<ExtArgs>
   deals?: boolean | Prisma.Client$dealsArgs<ExtArgs>
@@ -925,6 +1011,8 @@ export type $ClientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     phone: string | null
     email: string | null
     company: string | null
+    edrpou: string | null
+    status: $Enums.ClientStatus
     notes: string | null
     ownerId: number | null
     createdAt: Date
@@ -1360,6 +1448,8 @@ export interface ClientFieldRefs {
   readonly phone: Prisma.FieldRef<"Client", 'String'>
   readonly email: Prisma.FieldRef<"Client", 'String'>
   readonly company: Prisma.FieldRef<"Client", 'String'>
+  readonly edrpou: Prisma.FieldRef<"Client", 'String'>
+  readonly status: Prisma.FieldRef<"Client", 'ClientStatus'>
   readonly notes: Prisma.FieldRef<"Client", 'String'>
   readonly ownerId: Prisma.FieldRef<"Client", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Client", 'DateTime'>

@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ClientsService } from './clients.service.js';
 import { CreateClientDto } from './dto/create-client.dto.js';
 import { UpdateClientDto } from './dto/update-client.dto.js';
@@ -22,8 +22,8 @@ let ClientsController = class ClientsController {
     create(createClientDto) {
         return this.clientsService.create(createClientDto);
     }
-    findAll() {
-        return this.clientsService.findAll();
+    findAll(search, status) {
+        return this.clientsService.findAll(search, status);
     }
     findOne(id) {
         return this.clientsService.findOne(+id);
@@ -44,8 +44,10 @@ __decorate([
 ], ClientsController.prototype, "create", null);
 __decorate([
     Get(),
+    __param(0, Query('search')),
+    __param(1, Query('status')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", void 0)
 ], ClientsController.prototype, "findAll", null);
 __decorate([

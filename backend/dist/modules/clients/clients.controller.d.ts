@@ -5,60 +5,70 @@ export declare class ClientsController {
     private readonly clientsService;
     constructor(clientsService: ClientsService);
     create(createClientDto: CreateClientDto): import("../../generated/prisma/models.js").Prisma__ClientClient<{
-        id: number;
-        email: string | null;
         name: string;
-        createdAt: Date;
         phone: string | null;
+        email: string | null;
         company: string | null;
         notes: string | null;
-        ownerId: number | null;
+        edrpou: string | null;
+        status: import("../../generated/prisma/enums.js").ClientStatus;
+        createdAt: Date;
         updatedAt: Date;
+        id: number;
+        ownerId: number | null;
     }, never, import("@prisma/client/runtime/client").DefaultArgs, {
         omit: import("../../generated/prisma/internal/prismaNamespace.js").GlobalOmitConfig | undefined;
     }>;
-    findAll(): import("../../generated/prisma/internal/prismaNamespace.js").PrismaPromise<{
-        id: number;
-        email: string | null;
+    findAll(search?: string, status?: 'active' | 'lead' | 'inactive'): Promise<{
         name: string;
-        createdAt: Date;
         phone: string | null;
+        email: string | null;
         company: string | null;
         notes: string | null;
-        ownerId: number | null;
+        edrpou: string | null;
+        status: import("../../generated/prisma/enums.js").ClientStatus;
+        createdAt: Date;
         updatedAt: Date;
+        id: number;
+        ownerId: number | null;
     }[]>;
     findOne(id: string): Promise<{
-        id: number;
-        email: string | null;
         name: string;
-        createdAt: Date;
         phone: string | null;
+        email: string | null;
         company: string | null;
         notes: string | null;
-        ownerId: number | null;
+        edrpou: string | null;
+        status: import("../../generated/prisma/enums.js").ClientStatus;
+        createdAt: Date;
         updatedAt: Date;
+        id: number;
+        ownerId: number | null;
     }>;
     update(id: string, updateClientDto: UpdateClientDto): Promise<{
-        id: number;
-        email: string | null;
         name: string;
-        createdAt: Date;
         phone: string | null;
+        email: string | null;
         company: string | null;
         notes: string | null;
-        ownerId: number | null;
+        edrpou: string | null;
+        status: import("../../generated/prisma/enums.js").ClientStatus;
+        createdAt: Date;
         updatedAt: Date;
+        id: number;
+        ownerId: number | null;
     }>;
     remove(id: string): Promise<{
-        id: number;
-        email: string | null;
         name: string;
-        createdAt: Date;
         phone: string | null;
+        email: string | null;
         company: string | null;
         notes: string | null;
-        ownerId: number | null;
+        edrpou: string | null;
+        status: import("../../generated/prisma/enums.js").ClientStatus;
+        createdAt: Date;
         updatedAt: Date;
+        id: number;
+        ownerId: number | null;
     }>;
 }
