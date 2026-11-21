@@ -1,26 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma.service.js';
 import { CreateDealDto } from './dto/create-deal.dto.js';
 import { UpdateDealDto } from './dto/update-deal.dto.js';
 
 @Injectable()
 export class DealsService {
-  create(createDealDto: CreateDealDto) {
-    return 'This action adds a new deal';
+  constructor(private readonly prisma: PrismaService) {}
+
+  create(dto: CreateDealDto) {
+    return this.prisma.deal.create({ data: dto });
   }
 
   findAll() {
-    return `This action returns all deals`;
+    return this.prisma.deal.findMany({ orderBy: { createdAt: 'desc' } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} deal`;
+  async findOne(id: number) {
+    const deal = await this.prisma.deal.findUnique({ where: { id } });
+    if (!deal) throw new NotFoundException(`Deal ${id} not found`);
+    return deal;
   }
 
-  update(id: number, updateDealDto: UpdateDealDto) {
-    return `This action updates a #${id} deal`;
+  async update(id: number, dto: UpdateDealDto) {
+    await this.findOne(id);
+    const closedAt = dto.status && dto.status !== 'OPEN' ? new Date() : undefined;
+    return this.prisma.deal.update({ where: { id }, data: { ...dto, closedAt } });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} deal`;
+  async remove(id: number) {
+    await this.findOne(id);
+    return this.prisma.deal.delete({ where: { id } });
   }
 }

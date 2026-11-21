@@ -9,6 +9,7 @@ import { ProductsModule } from './modules/products/products.module.js';
 import { AnalyticsModule } from './modules/analytics/analytics.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { PrismaModule } from './prisma.module.js';
+import { StagesModule } from './modules/stages/stages.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -29,6 +30,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ProductsModule,
     AnalyticsModule,
     AuthModule,
+    StagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

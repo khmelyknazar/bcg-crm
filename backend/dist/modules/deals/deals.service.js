@@ -4,26 +4,41 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-import { Injectable } from '@nestjs/common';
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma.service.js';
 let DealsService = class DealsService {
-    create(createDealDto) {
-        return 'This action adds a new deal';
+    prisma;
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    create(dto) {
+        return this.prisma.deal.create({ data: dto });
     }
     findAll() {
-        return `This action returns all deals`;
+        return this.prisma.deal.findMany({ orderBy: { createdAt: 'desc' } });
     }
-    findOne(id) {
-        return `This action returns a #${id} deal`;
+    async findOne(id) {
+        const deal = await this.prisma.deal.findUnique({ where: { id } });
+        if (!deal)
+            throw new NotFoundException(`Deal ${id} not found`);
+        return deal;
     }
-    update(id, updateDealDto) {
-        return `This action updates a #${id} deal`;
+    async update(id, dto) {
+        await this.findOne(id);
+        const closedAt = dto.status && dto.status !== 'OPEN' ? new Date() : undefined;
+        return this.prisma.deal.update({ where: { id }, data: { ...dto, closedAt } });
     }
-    remove(id) {
-        return `This action removes a #${id} deal`;
+    async remove(id) {
+        await this.findOne(id);
+        return this.prisma.deal.delete({ where: { id } });
     }
 };
 DealsService = __decorate([
-    Injectable()
+    Injectable(),
+    __metadata("design:paramtypes", [PrismaService])
 ], DealsService);
 export { DealsService };
 //# sourceMappingURL=deals.service.js.map
