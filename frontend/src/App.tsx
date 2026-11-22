@@ -8,6 +8,9 @@ import { TasksPage } from './components/tasks/TasksPage';
 import { ServicesPage } from './components/services/ServicesPage';
 import { navItems } from './config/navigation';
 import { useCrm } from './context/crm-context';
+import { useAuth } from './context/auth-context';
+import { CrmProvider } from './context/CrmProvider';
+import { LoginPage } from './components/auth/LoginPage';
 
 // Розділи, для яких уже є справжні сторінки
 const readyPaths = ['/clients', '/deals', '/tasks', '/services'];
@@ -20,7 +23,8 @@ function Placeholder({ title }: { title: string }) {
   );
 }
 
-export default function App() {
+// Основний інтерфейс: бачить його лише той, хто увійшов
+function AppShell() {
   const { status, error, retry } = useCrm();
   // Початковий стан меню: збережений вибір користувача, інакше залежно від ширини екрана
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
@@ -85,5 +89,26 @@ export default function App() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  const { status } = useAuth();
+
+  if (status === 'checking') {
+    return (
+      <div className="min-h-screen bg-zinc-200 flex items-center justify-center text-sm text-zinc-500">
+        Завантаження...
+      </div>
+    );
+  }
+
+  if (status === 'guest') return <LoginPage />;
+
+  // Дані CRM завантажуються лише після входу, а після виходу вони зникають разом із провайдером
+  return (
+    <CrmProvider>
+      <AppShell />
+    </CrmProvider>
   );
 }

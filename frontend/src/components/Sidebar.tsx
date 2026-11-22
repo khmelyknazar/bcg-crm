@@ -1,6 +1,8 @@
 import { LogOut, SquareChevronLeft } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { navItems } from '../config/navigation';
+import { useAuth } from '../context/auth-context';
+import { ROLE_LABELS } from '../types/auth';
 import logoImg from '../assets/BCG_logo.png';
 
 interface SidebarProps {
@@ -9,6 +11,7 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
+  const { user, logout } = useAuth();
   return (
     <aside
       className={`${isOpen ? 'w-60' : 'w-20'} h-screen bg-white border-r border-zinc-300 text-zinc-600 flex flex-col justify-between shrink-0 transition-all duration-200 z-20`}
@@ -77,17 +80,21 @@ export const Sidebar = ({ isOpen, toggleSidebar }: SidebarProps) => {
       <div className={`border-t border-zinc-300 p-4 flex items-center ${isOpen ? 'justify-between' : 'justify-center'}`}>
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-300 flex items-center justify-center text-xs font-semibold text-zinc-800 shrink-0">
-            М
+            {user?.name.charAt(0).toUpperCase()}
           </div>
           {isOpen && (
             <div className="text-xs overflow-hidden whitespace-nowrap">
-              <p className="font-semibold text-zinc-900">Михайло</p>
-              <p className="text-zinc-500 text-[11px]">Менеджер</p>
+              <p className="font-semibold text-zinc-900">{user?.name}</p>
+              <p className="text-zinc-500 text-[11px]">{user ? ROLE_LABELS[user.role] : ""}</p>
             </div>
           )}
         </div>
         {isOpen && (
-          <button className="text-zinc-400 hover:text-zinc-700 p-1.5 transition-colors shrink-0 hover:bg-zinc-100 rounded-lg">
+          <button
+            onClick={logout}
+            title="Вийти"
+            className="text-zinc-400 hover:text-zinc-700 p-1.5 transition-colors shrink-0 hover:bg-zinc-100 rounded-lg"
+          >
             <LogOut className="w-4 h-4" />
           </button>
         )}
