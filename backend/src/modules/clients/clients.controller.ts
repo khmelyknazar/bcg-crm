@@ -14,12 +14,6 @@ export class ClientsController {
     return this.clientsService.create(createClientDto, userId);
   }
 
-  @Delete(':id')
-  @Roles('OWNER')
-  remove(@Param('id') id: string) {
-    return this.clientsService.remove(+id);
-  }
-
   @Get()
   findAll(
     @Query('search') search?: string,
@@ -36,6 +30,12 @@ export class ClientsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClientDto: UpdateClientDto) {
     return this.clientsService.update(+id, updateClientDto);
+  }
+
+  @Delete(':id')
+  @Roles('OWNER')
+  remove(@Param('id') id: string) {
+    return this.clientsService.remove(+id);
   }
 
 }

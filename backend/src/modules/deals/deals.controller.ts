@@ -14,12 +14,6 @@ export class DealsController {
     return this.dealsService.create(createDealDto, userId);
   }
 
-  @Delete(':id')
-  @Roles('OWNER')
-  remove(@Param('id') id: string) {
-    return this.dealsService.remove(+id);
-  }
-
   @Get()
   findAll() {
     return this.dealsService.findAll();
@@ -33,5 +27,11 @@ export class DealsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateDealDto: UpdateDealDto) {
     return this.dealsService.update(+id, updateDealDto);
+  }
+
+  @Delete(':id')
+  @Roles('OWNER')
+  remove(@Param('id') id: string) {
+    return this.dealsService.remove(+id);
   }
 }
