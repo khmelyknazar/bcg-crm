@@ -2,14 +2,22 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { ClientsService } from './clients.service.js';
 import { CreateClientDto } from './dto/create-client.dto.js';
 import { UpdateClientDto } from './dto/update-client.dto.js';
+import { CurrentUserId } from '../auth/current-user.decorator.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 @Controller('clients')
 export class ClientsController {
   constructor(private readonly clientsService: ClientsService) {}
 
   @Post()
-  create(@Body() createClientDto: CreateClientDto) {
-    return this.clientsService.create(createClientDto);
+  create(@Body() createClientDto: CreateClientDto, @CurrentUserId() userId?: number) {
+    return this.clientsService.create(createClientDto, userId);
+  }
+
+  @Delete(':id')
+  @Roles('OWNER')
+  remove(@Param('id') id: string) {
+    return this.clientsService.remove(+id);
   }
 
   @Get()
@@ -30,8 +38,4 @@ export class ClientsController {
     return this.clientsService.update(+id, updateClientDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clientsService.remove(+id);
-  }
 }

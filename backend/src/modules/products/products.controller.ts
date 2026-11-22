@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ProductsService } from './products.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
 import { UpdateProductDto } from './dto/update-product.dto.js';
+import { Roles } from '../auth/roles.decorator.js';
 
 @Controller('products')
 export class ProductsController {
@@ -28,6 +29,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @Roles('OWNER')
   remove(@Param('id') id: string) {
     return this.productsService.remove(+id);
   }

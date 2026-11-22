@@ -1,4 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+import { hash } from 'bcryptjs';
 import { PrismaService } from './prisma.service.js';
 
 @Injectable()
@@ -7,6 +8,8 @@ export class SeedService implements OnModuleInit {
 
   async onModuleInit() {
     await this.seedProducts();
+    await this.seedUsers();
+
     if ((await this.prisma.client.count()) > 0) return;
 
     await this.prisma.stage.createMany({
@@ -57,7 +60,27 @@ export class SeedService implements OnModuleInit {
       ],
     });
   }
-    private async seedProducts() {
+
+  private async seedUsers() {
+    const demo = [
+      { email: 'owner@bcg.ua', name: 'Власник', password: 'owner123', role: 'OWNER' as const },
+      { email: 'manager@bcg.ua', name: 'Михайло', password: 'manager123', role: 'MANAGER' as const },
+    ];
+    for (const u of demo) {
+      const exists = await this.prisma.user.findUnique({ where: { email: u.email } });
+      if (exists) continue;
+      await this.prisma.user.create({
+        data: {
+          email: u.email,
+          name: u.name,
+          role: u.role,
+          passwordHash: await hash(u.password, 10),
+        },
+      });
+    }
+  }
+
+  private async seedProducts() {
     if ((await this.prisma.product.count()) > 0) return;
     await this.prisma.product.createMany({
       data: [
