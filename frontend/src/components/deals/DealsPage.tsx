@@ -3,6 +3,7 @@ import type { DragEvent, FC } from 'react';
 import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
+import { useAuth } from '../../context/auth-context';
 import { DEAL_STATUS_LABELS } from '../../types/deal';
 import type { Deal, DealFormData, DealStatus } from '../../types/deal';
 import { formatMoney } from '../../utils/format';
@@ -18,6 +19,8 @@ const statusStyles: Record<DealStatus, string> = {
 
 export const DealsPage: FC = () => {
   const { clients, deals, setDeals, stages, reload } = useCrm();
+  const { user } = useAuth();
+  const canDelete = user?.role === 'OWNER'; // на бекенді видаляти може лише власник
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<DealStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -201,9 +204,11 @@ export const DealsPage: FC = () => {
                           <button onClick={() => openEdit(deal)} title="Редагувати" className="p-1 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-md">
                             <Pencil className="w-3.5 h-3.5" />
                           </button>
-                          <button onClick={() => handleDelete(deal)} title="Видалити" className="p-1 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-md">
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          {canDelete && (
+                            <button onClick={() => handleDelete(deal)} title="Видалити" className="p-1 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-md">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          )}
                         </div>
                       </div>
 

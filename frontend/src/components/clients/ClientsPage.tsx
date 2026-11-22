@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { Plus, Search, Pencil, Trash2 } from 'lucide-react';
 import { Select } from '../ui/Select';
 import { useCrm } from '../../context/crm-context';
+import { useAuth } from '../../context/auth-context';
 import { STATUS_LABELS } from '../../types/client';
 import type { Client, ClientFormData, ClientStatus } from '../../types/client';
 import { ErrorBanner } from '../ui/ErrorBanner';
@@ -17,6 +18,8 @@ const statusStyles: Record<ClientStatus, string> = {
 
 export const ClientsPage: FC = () => {
   const { clients, setClients, setDeals, setTasks } = useCrm();
+  const { user } = useAuth();
+  const canDelete = user?.role === 'OWNER'; // на бекенді видаляти може лише власник
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<ClientStatus | 'all'>('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -140,9 +143,11 @@ export const ClientsPage: FC = () => {
                     <button onClick={() => openEdit(c)} title="Редагувати" className="p-1.5 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg">
                       <Pencil className="w-4 h-4" />
                     </button>
-                    <button onClick={() => handleDelete(c)} title="Видалити" className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {canDelete && (
+                      <button onClick={() => handleDelete(c)} title="Видалити" className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

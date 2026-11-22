@@ -1,9 +1,10 @@
 import { request } from './http';
+import type { AuthUser } from '../types/auth';
 import type { Client, ClientFormData, ClientStatus } from '../types/client';
 import type { Deal, DealFormData, DealStatus, Stage } from '../types/deal';
 import type { Task, TaskFormData } from '../types/task';
 
-export { getErrorMessage } from './http';
+export { ApiError, getErrorMessage } from './http';
 
 // Бекенд віддає дати як ISO-рядки (2026-11-14T15:13:23.000Z), а в таблицях потрібні лише 10 символів
 const toDate = (iso: string) => iso.slice(0, 10);
@@ -123,4 +124,15 @@ export interface FunnelItem {
 export const analyticsApi = {
   summary: () => request<AnalyticsSummary>('/analytics/summary'),
   funnel: () => request<FunnelItem[]>('/analytics/funnel'),
+};
+
+export const authApi = {
+  // auth: false — для логіну токен ще не потрібен, а 401 означає "невірний пароль", а не вихід із системи
+  login: (email: string, password: string) =>
+    request<{ accessToken: string; user: AuthUser }>('/auth/login', {
+      method: 'POST',
+      body: { email, password },
+      auth: false,
+    }),
+  me: () => request<AuthUser>('/auth/me'),
 };
