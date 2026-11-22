@@ -7,8 +7,8 @@ import { UpdateClientDto } from './dto/update-client.dto.js';
 export class ClientsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateClientDto) {
-    return this.prisma.client.create({ data: dto });
+  create(dto: CreateClientDto, ownerId?: number) {
+    return this.prisma.client.create({ data: { ...dto, ownerId } });
   }
 
   async findAll(search?: string, status?: 'active' | 'lead' | 'inactive') {

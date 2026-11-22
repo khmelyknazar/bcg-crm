@@ -1,4 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+import { hash } from 'bcryptjs';
 import { PrismaService } from './prisma.service.js';
 
 @Injectable()
@@ -6,6 +7,9 @@ export class SeedService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
   async onModuleInit() {
+    await this.seedProducts();
+    await this.seedUsers();
+
     if ((await this.prisma.client.count()) > 0) return;
 
     await this.prisma.stage.createMany({
@@ -53,6 +57,40 @@ export class SeedService implements OnModuleInit {
         { id: 5, title: 'Уточнити вимоги до порталу', done: false, dueDate: new Date('2026-11-17'), clientId: 5 },
         { id: 6, title: 'Погодити етапи мобільного застосунку', done: false, dueDate: new Date('2026-11-25'), clientId: 6 },
         { id: 7, title: 'Надіслати рахунок за навчання', done: true, dueDate: new Date('2026-11-12'), clientId: 8 },
+      ],
+    });
+  }
+
+  private async seedUsers() {
+    const demo = [
+      { email: 'owner@bcg.ua', name: 'Власник', password: 'owner123', role: 'OWNER' as const },
+      { email: 'manager@bcg.ua', name: 'Михайло', password: 'manager123', role: 'MANAGER' as const },
+    ];
+    for (const u of demo) {
+      const exists = await this.prisma.user.findUnique({ where: { email: u.email } });
+      if (exists) continue;
+      await this.prisma.user.create({
+        data: {
+          email: u.email,
+          name: u.name,
+          role: u.role,
+          passwordHash: await hash(u.password, 10),
+        },
+      });
+    }
+  }
+
+  private async seedProducts() {
+    if ((await this.prisma.product.count()) > 0) return;
+    await this.prisma.product.createMany({
+      data: [
+        { id: 1, name: 'Розробка веб-сайту', price: 60000 },
+        { id: 2, name: 'Мобільний застосунок', price: 180000 },
+        { id: 3, name: 'Технічна підтримка (місяць)', price: 8000 },
+        { id: 4, name: 'Аудит безпеки', price: 28000 },
+        { id: 5, name: 'Інтеграція з обліковою системою', price: 45000 },
+        { id: 6, name: 'Навчання персоналу', price: 15000 },
+        { id: 7, name: 'Консультація (година)', price: 1500 },
       ],
     });
   }

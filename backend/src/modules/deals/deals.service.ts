@@ -7,8 +7,8 @@ import { UpdateDealDto } from './dto/update-deal.dto.js';
 export class DealsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(dto: CreateDealDto) {
-    return this.prisma.deal.create({ data: dto });
+  create(dto: CreateDealDto, ownerId?: number) {
+    return this.prisma.deal.create({ data: { ...dto, ownerId } });
   }
 
   findAll() {
