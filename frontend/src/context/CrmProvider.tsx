@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { CrmContext } from './crm-context';
 import type { LoadStatus } from './crm-context';
-import { clientsApi, dealsApi, getErrorMessage, stagesApi, tasksApi } from '../api';
-import { initialServices } from '../data/services';
+import { clientsApi, dealsApi, getErrorMessage, servicesApi, stagesApi, tasksApi } from '../api';
 import type { Client } from '../types/client';
 import type { Deal, Stage } from '../types/deal';
 import type { Task } from '../types/task';
@@ -15,23 +14,24 @@ export function CrmProvider({ children }: { children: ReactNode }) {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [stages, setStages] = useState<Stage[]>([]);
-  // Послуги: на бекенді розділ ще не готовий, тому беремо тестові дані
-  const [services, setServices] = useState<Service[]>(initialServices);
+  const [services, setServices] = useState<Service[]>([]);
   const [status, setStatus] = useState<LoadStatus>('loading');
   const [error, setError] = useState<string | null>(null);
 
   // Завантажує все з сервера. Викликається при старті, повторі після помилки та для відкату змін.
   const reload = useCallback(async () => {
     try {
-      const [clientsData, dealsData, tasksData, stagesData] = await Promise.all([
+      const [clientsData, dealsData, tasksData, stagesData, servicesData] = await Promise.all([
         clientsApi.list(),
         dealsApi.list(),
         tasksApi.list(),
         stagesApi.list(),
+        servicesApi.list(),
       ]);
       setClients(clientsData);
       setDeals(dealsData);
       setTasks(tasksData);
+      setServices(servicesData);
       setStages([...stagesData].sort((a, b) => a.position - b.position));
       setError(null);
       setStatus('ready');

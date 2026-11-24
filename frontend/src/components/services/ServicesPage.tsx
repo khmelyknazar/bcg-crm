@@ -6,6 +6,8 @@ import { useAuth } from '../../context/auth-context';
 import type { Service, ServiceFormData } from '../../types/service';
 import { formatMoney } from '../../utils/format';
 import { ServiceModal } from './ServiceModal';
+import { ErrorBanner } from '../ui/ErrorBanner';
+import { getErrorMessage, servicesApi } from '../../api';
 
 export const ServicesPage: FC = () => {
   const { services, setServices } = useCrm();
@@ -14,6 +16,7 @@ export const ServicesPage: FC = () => {
   const [query, setQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Service | null>(null);
+  const [error, setError] = useState('');
 
   const visibleServices = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -32,27 +35,34 @@ export const ServicesPage: FC = () => {
     setIsModalOpen(true);
   };
 
-  const handleSave = (data: ServiceFormData) => {
-    if (editing) {
-      setServices((prev) => prev.map((s) => (s.id === editing.id ? { ...s, ...data } : s)));
-    } else {
-      const newService: Service = {
-        ...data,
-        id: services.reduce((max, s) => Math.max(max, s.id), 0) + 1,
-      };
-      setServices((prev) => [newService, ...prev]);
+  const handleSave = async (data: ServiceFormData) => {
+    try {
+      if (editing) {
+        const updated = await servicesApi.update(editing.id, data);
+        setServices((prev) => prev.map((s) => (s.id === editing.id ? updated : s)));
+      } else {
+        const created = await servicesApi.create(data);
+        setServices((prev) => [created, ...prev]);
+      }
+      setIsModalOpen(false);
+    } catch (e) {
+      setError(getErrorMessage(e));
     }
-    setIsModalOpen(false);
   };
 
-  const handleDelete = (service: Service) => {
-    if (window.confirm(`Видалити послугу "${service.name}"?`)) {
+  const handleDelete = async (service: Service) => {
+    if (!window.confirm(`Видалити послугу "${service.name}"?`)) return;
+    try {
+      await servicesApi.remove(service.id);
       setServices((prev) => prev.filter((s) => s.id !== service.id));
+    } catch (e) {
+      setError(getErrorMessage(e));
     }
   };
 
   return (
     <div className="bg-white border border-zinc-300 rounded-xl shadow-sm">
+      {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       <div className="flex flex-wrap items-center gap-3 p-4 border-b border-zinc-200">
         <div className="relative flex-1 min-w-56 max-w-sm">
           <Search className="w-4 h-4 text-zinc-400 absolute left-3 top-1/2 -translate-y-1/2" />
