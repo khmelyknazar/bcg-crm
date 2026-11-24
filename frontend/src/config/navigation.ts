@@ -1,4 +1,4 @@
-import { LayoutDashboard, Users, Handshake, Package, ClipboardList, Settings } from 'lucide-react';
+import { LayoutDashboard, Users, Handshake, Package, ClipboardList, MessageCircle, Settings } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 export interface NavItem {
@@ -14,5 +14,6 @@ export const navItems: NavItem[] = [
   { path: '/deals', label: 'Угоди', icon: Handshake },
   { path: '/services', label: 'Послуги', icon: Package },
   { path: '/tasks', label: 'Завдання', icon: ClipboardList },
+  { path: '/chats', label: 'Чати', icon: MessageCircle },
   { path: '/settings', label: 'Налаштування', icon: Settings },
 ];
