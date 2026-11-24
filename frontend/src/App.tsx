@@ -7,6 +7,7 @@ import { DealsPage } from './components/deals/DealsPage';
 import { TasksPage } from './components/tasks/TasksPage';
 import { ServicesPage } from './components/services/ServicesPage';
 import { AnalyticsPage } from './components/analytics/AnalyticsPage';
+import { ChatsPage } from './components/chats/ChatsPage';
 import { SettingsPage } from './components/settings/SettingsPage';
 import { navItems } from './config/navigation';
 import { useCrm } from './context/crm-context';
@@ -15,7 +16,7 @@ import { CrmProvider } from './context/CrmProvider';
 import { LoginPage } from './components/auth/LoginPage';
 
 // Розділи, для яких уже є справжні сторінки
-const readyPaths = ['/analytics', '/clients', '/deals', '/tasks', '/services', '/settings'];
+const readyPaths = ['/analytics', '/clients', '/deals', '/tasks', '/services', '/chats', '/settings'];
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -80,6 +81,7 @@ function AppShell() {
               <Route path="/deals" element={<DealsPage />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/services" element={<ServicesPage />} />
+              <Route path="/chats" element={<ChatsPage />} />
               <Route path="/settings" element={<SettingsPage />} />
               {navItems
                 .filter((item) => !readyPaths.includes(item.path))

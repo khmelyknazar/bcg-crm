@@ -3,6 +3,7 @@ import type { AuthUser, UserRole } from '../types/auth';
 import type { Client, ClientFormData, ClientStatus } from '../types/client';
 import type { Deal, DealFormData, DealStatus, Stage } from '../types/deal';
 import type { Task, TaskFormData } from '../types/task';
+import type { Chat, ChatMessage } from '../types/chat';
 
 export { ApiError, getErrorMessage } from './http';
 
@@ -124,6 +125,14 @@ export interface FunnelItem {
 export const analyticsApi = {
   summary: () => request<AnalyticsSummary>('/analytics/summary'),
   funnel: () => request<FunnelItem[]>('/analytics/funnel'),
+};
+
+// Чати (Telegram): бекенд зберігає розмови й повідомлення, бот працює на сервері
+export const chatsApi = {
+  list: () => request<Chat[]>('/chats'),
+  messages: (id: number) => request<ChatMessage[]>(`/chats/${id}/messages`),
+  send: (id: number, text: string) =>
+    request<ChatMessage>(`/chats/${id}/messages`, { method: 'POST', body: { text } }),
 };
 
 // Для розділу налаштувань (керування ролями)
