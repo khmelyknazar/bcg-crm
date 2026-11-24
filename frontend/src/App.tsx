@@ -6,6 +6,8 @@ import { ClientsPage } from './components/clients/ClientsPage';
 import { DealsPage } from './components/deals/DealsPage';
 import { TasksPage } from './components/tasks/TasksPage';
 import { ServicesPage } from './components/services/ServicesPage';
+import { AnalyticsPage } from './components/analytics/AnalyticsPage';
+import { SettingsPage } from './components/settings/SettingsPage';
 import { navItems } from './config/navigation';
 import { useCrm } from './context/crm-context';
 import { useAuth } from './context/auth-context';
@@ -13,7 +15,7 @@ import { CrmProvider } from './context/CrmProvider';
 import { LoginPage } from './components/auth/LoginPage';
 
 // Розділи, для яких уже є справжні сторінки
-const readyPaths = ['/clients', '/deals', '/tasks', '/services'];
+const readyPaths = ['/analytics', '/clients', '/deals', '/tasks', '/services', '/settings'];
 
 function Placeholder({ title }: { title: string }) {
   return (
@@ -73,10 +75,12 @@ function AppShell() {
             <Routes>
               {/* Редірект: головна адреса "/" перенаправляє на клієнтів */}
               <Route path="/" element={<Navigate to="/clients" replace />} />
+              <Route path="/analytics" element={<AnalyticsPage />} />
               <Route path="/clients" element={<ClientsPage />} />
               <Route path="/deals" element={<DealsPage />} />
               <Route path="/tasks" element={<TasksPage />} />
               <Route path="/services" element={<ServicesPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
               {navItems
                 .filter((item) => !readyPaths.includes(item.path))
                 .map((item) => (
