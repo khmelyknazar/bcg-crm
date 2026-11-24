@@ -2,12 +2,15 @@ import { useMemo, useState } from 'react';
 import type { FC } from 'react';
 import { Pencil, Plus, Search, Trash2 } from 'lucide-react';
 import { useCrm } from '../../context/crm-context';
+import { useAuth } from '../../context/auth-context';
 import type { Service, ServiceFormData } from '../../types/service';
 import { formatMoney } from '../../utils/format';
 import { ServiceModal } from './ServiceModal';
 
 export const ServicesPage: FC = () => {
   const { services, setServices } = useCrm();
+  const { user } = useAuth();
+  const canDelete = user?.role === 'OWNER';
   const [query, setQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editing, setEditing] = useState<Service | null>(null);
@@ -91,9 +94,11 @@ export const ServicesPage: FC = () => {
                     <button onClick={() => openEdit(service)} title="Редагувати" className="p-1.5 text-zinc-400 hover:text-zinc-800 hover:bg-zinc-100 rounded-lg">
                       <Pencil className="w-4 h-4" />
                     </button>
-                    <button onClick={() => handleDelete(service)} title="Видалити" className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {canDelete && (
+                      <button onClick={() => handleDelete(service)} title="Видалити" className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

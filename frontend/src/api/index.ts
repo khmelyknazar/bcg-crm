@@ -1,5 +1,5 @@
 import { request } from './http';
-import type { AuthUser } from '../types/auth';
+import type { AuthUser, UserRole } from '../types/auth';
 import type { Client, ClientFormData, ClientStatus } from '../types/client';
 import type { Deal, DealFormData, DealStatus, Stage } from '../types/deal';
 import type { Task, TaskFormData } from '../types/task';
@@ -124,6 +124,13 @@ export interface FunnelItem {
 export const analyticsApi = {
   summary: () => request<AnalyticsSummary>('/analytics/summary'),
   funnel: () => request<FunnelItem[]>('/analytics/funnel'),
+};
+
+// Для розділу налаштувань (керування ролями)
+export const usersApi = {
+  list: () => request<AuthUser[]>('/users'),
+  setRole: (id: number, role: UserRole) =>
+    request<AuthUser>(`/users/${id}/role`, { method: 'PATCH', body: { role } }),
 };
 
 export const authApi = {
