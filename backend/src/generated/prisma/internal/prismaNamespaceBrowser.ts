@@ -57,7 +57,9 @@ export const ModelName = {
   Deal: 'Deal',
   Product: 'Product',
   DealItem: 'DealItem',
-  Task: 'Task'
+  Task: 'Task',
+  Chat: 'Chat',
+  Message: 'Message'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -158,6 +160,30 @@ export const TaskScalarFieldEnum = {
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const ChatScalarFieldEnum = {
+  id: 'id',
+  telegramChatId: 'telegramChatId',
+  name: 'name',
+  lastMessage: 'lastMessage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ChatScalarFieldEnum = (typeof ChatScalarFieldEnum)[keyof typeof ChatScalarFieldEnum]
+
+
+export const MessageScalarFieldEnum = {
+  id: 'id',
+  chatId: 'chatId',
+  direction: 'direction',
+  text: 'text',
+  externalId: 'externalId',
+  createdAt: 'createdAt'
+} as const
+
+export type MessageScalarFieldEnum = (typeof MessageScalarFieldEnum)[keyof typeof MessageScalarFieldEnum]
 
 
 export const SortOrder = {

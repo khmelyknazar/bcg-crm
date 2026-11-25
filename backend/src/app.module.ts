@@ -10,7 +10,8 @@ import { AnalyticsModule } from './modules/analytics/analytics.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { PrismaModule } from './prisma.module.js';
 import { StagesModule } from './modules/stages/stages.module.js';
-import { UsersModule } from './modules/users/users.module.js'
+import { UsersModule } from './modules/users/users.module.js';
+import { ChatsModule } from './modules/chats/chats.module.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -32,6 +33,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     AnalyticsModule,
     AuthModule,
     UsersModule,
+    ChatsModule,
     StagesModule,
   ],
   controllers: [AppController],

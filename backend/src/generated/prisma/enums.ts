@@ -33,3 +33,11 @@ export const ClientStatus = {
 } as const
 
 export type ClientStatus = (typeof ClientStatus)[keyof typeof ClientStatus]
+
+
+export const MessageDirection = {
+  IN: 'IN',
+  OUT: 'OUT'
+} as const
+
+export type MessageDirection = (typeof MessageDirection)[keyof typeof MessageDirection]

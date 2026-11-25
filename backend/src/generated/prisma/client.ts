@@ -76,3 +76,13 @@ export type DealItem = Prisma.DealItemModel
  * 
  */
 export type Task = Prisma.TaskModel
+/**
+ * Model Chat
+ * 
+ */
+export type Chat = Prisma.ChatModel
+/**
+ * Model Message
+ * 
+ */
+export type Message = Prisma.MessageModel
