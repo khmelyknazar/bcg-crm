@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { analyticsApi, getErrorMessage } from '../../api';
 import type { AnalyticsSummary, FunnelItem } from '../../api';
 import { formatMoney } from '../../utils/format';
@@ -24,26 +24,32 @@ export function AnalyticsPage() {
   const [funnel, setFunnel] = useState<FunnelItem[]>([]);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    let cancelled = false;
-    Promise.all([analyticsApi.summary(), analyticsApi.funnel()])
-      .then(([s, f]) => {
-        if (cancelled) return;
-        setSummary(s);
-        setFunnel(f);
-      })
-      .catch((e) => {
-        if (!cancelled) setError(getErrorMessage(e));
-      });
-    return () => {
-      cancelled = true;
-    };
+  const load = useCallback(async () => {
+    try {
+      const [s, f] = await Promise.all([analyticsApi.summary(), analyticsApi.funnel()]);
+      setSummary(s);
+      setFunnel(f);
+      setError('');
+    } catch (e) {
+      setError(getErrorMessage(e));
+    }
   }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
 
   if (error) {
     return (
-      <div className="p-8 bg-white border border-zinc-300 shadow-sm rounded-xl text-center text-sm text-zinc-500">
-        Не вдалося завантажити аналітику: {error}
+      <div className="p-8 bg-white border border-zinc-300 shadow-sm rounded-xl text-center">
+        <p className="font-medium text-zinc-900">Не вдалося завантажити аналітику</p>
+        <p className="mt-1 text-sm text-zinc-500">{error}</p>
+        <button
+          onClick={load}
+          className="mt-4 h-9 px-4 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-800"
+        >
+          Спробувати ще раз
+        </button>
       </div>
     );
   }
